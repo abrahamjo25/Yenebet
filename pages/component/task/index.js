@@ -16,7 +16,7 @@ const index = () => {
                                 <span className="text-400">- Read and Complete to 💰Earn</span>{' '}
                             </h5>
                             <Accordion activeIndex={0}>
-                                <AccordionTab header="Tip 1  Removing Atletes foot Problem">
+                                <AccordionTab header="Tip 1 - Removing athlete  foot Problem">
                                     {/* <p style={{ color: '#22C55E' }}>Read and press complete button to get Bonus!</p> */}
                                     <p>
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
