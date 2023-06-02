@@ -177,7 +177,7 @@ const index = (props) => {
                                 </DataTable>{' '}
                             </div>
                         </div>
-                        <Dialog visible={withdraw} style={{ width: '25vw', height: '65vh' }} header={'Withdraw '} modal className="p-fluid" footer={withdrawDialogFooter} onHide={hidewithdrawTrsDialog}>
+                        <Dialog visible={withdraw} style={{ width: '450px' }} header={'Withdraw '} modal className="p-fluid" footer={withdrawDialogFooter} onHide={hidewithdrawTrsDialog}>
                             <div className="p-fluid card mt-2 ">
                                 <div className="field">
                                     <br />
