@@ -17,35 +17,32 @@ const AppMenu = () => {
             icon: 'pi pi-th-large',
             items: [
                 {
-                    label: 'Users',
-                    icon: 'pi pi-fw pi-user',
-                    to: '/management/users'
+                    label: 'Account Managment',
+                    icon: '',
+                    items: [
+                        {
+                            label: 'Users',
+                            icon: 'pi pi-fw pi-user',
+                            to: '/management/users'
+                        },
+
+                        {
+                            label: 'Clients',
+                            icon: 'pi pi-fw pi-comments',
+                            to: '/management/clients'
+                        },
+                        {
+                            label: 'Services',
+                            icon: 'pi pi-fw pi-check-square',
+                            to: '/management/services'
+                        }
+                    ]
                 },
-                // {
-                //     label: 'Roles',
-                //     icon: 'pi pi-fw pi-folder',
-                //     to: '/management/roles'
-                // },
                 {
-                    label: 'Clients',
-                    icon: 'pi pi-fw pi-comments',
-                    to: '/management/clients'
-                },
-                {
-                    label: 'Services',
-                    icon: 'pi pi-fw pi-check-square',
-                    to: '/management/services'
+                    label: 'Packages',
+                    icon: 'pi pi-fw pi-home',
+                    to: '/admin/packages'
                 }
-                // {
-                //     label: 'Api Claims',
-                //     icon: 'pi pi-fw pi-comments',
-                //     to: '/management/ApiClaims'
-                // },
-                // {
-                //     label: 'Client Claims',
-                //     icon: 'pi pi-fw pi-briefcase',
-                //     to: '/management/ClientClaim'
-                // },
             ]
         }
     ];
