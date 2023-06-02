@@ -8,7 +8,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { Button } from 'primereact/button';
 function Header({}) {
     const router = useRouter();
-    const nestedMenuitems = [
+    const nestedMenuitemsGuest = [
         {
             label: 'Home',
             icon: 'pi pi-fw pi-table',
@@ -24,27 +24,49 @@ function Header({}) {
             }
         },
         {
-            label: 'Contact',
-            icon: 'pi pi-fw pi-envelope',
+            label: 'Get Started',
+            icon: 'pi pi-clone',
             command: () => {
-                router.push('/component/contact');
+                router.push('/component/register');
+            }
+        }
+    ];
+    const nestedMenuitemsUser = [
+        {
+            label: 'Home',
+            icon: 'pi pi-fw pi-table',
+            command: () => {
+                router.push('/');
             }
         },
-        !secureLocalStorage.getItem('idToken')
-            ? {
-                  label: 'Get Started',
-                  icon: 'pi pi-clone',
-                  command: () => {
-                      router.push('/component/register');
-                  }
-              }
-            : {
-                  label: 'Profile',
-                  icon: 'pi pi-fw pi-user',
-                  command: () => {
-                      router.push('/component/profile');
-                  }
-              }
+        {
+            label: 'Packeges',
+            icon: 'pi pi-fw pi-shopping-cart',
+            command: () => {
+                router.push('/component/packages');
+            }
+        },
+        {
+            label: 'Transaction',
+            icon: 'pi pi-fw pi-envelope',
+            command: () => {
+                router.push('/component/transaction');
+            }
+        },
+        {
+            label: 'Profile',
+            icon: 'pi pi-fw pi-user',
+            command: () => {
+                router.push('/component/profile');
+            }
+        },
+        {
+            label: 'Task',
+            icon: 'pi pi-bars',
+            command: () => {
+                router.push('/component/task');
+            }
+        }
     ];
     const logOut = () => {
         // secureLocalStorage.clear();
@@ -60,13 +82,12 @@ function Header({}) {
     return (
         <>
             <Image src={yenebet} height={60} width={200} alt="Logo" />
-            {/* <img src={yenebet} alt="Logo" height={50} /> */}
-            <Menubar model={nestedMenuitems} end={menubarEndTemplate}></Menubar>
+            <Menubar model={!secureLocalStorage.getItem('idToken') ? nestedMenuitemsGuest : nestedMenuitemsUser} end={menubarEndTemplate}></Menubar>
             <div className="col-12">
                 <div className="flex flex-column sm:flex-row align-items-center gap-4">
                     <div className="flex flex-column sm:flex-row align-items-center gap-3">
                         <div className="flex flex-column align-items-center sm:align-items-start">
-                            <span className="text-900 font-bold text-2xl">Welcome Daniel</span>
+                            <span className="text-600 font-bold text-2xl">Welcome Daniel</span>
                         </div>
                     </div>
                     <div className="flex gap-2 sm:ml-auto">

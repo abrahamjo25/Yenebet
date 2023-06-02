@@ -8,7 +8,7 @@ const index = () => {
             <div className="col-12">
                 <div className="card">
                     <Header />
-                    Contact
+                    Transaction History
                     <Footer />
                 </div>
             </div>
