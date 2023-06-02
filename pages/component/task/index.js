@@ -13,11 +13,11 @@ const index = () => {
                         <div className="card">
                             <h5>
                                 <span style={{ color: '#6366F1' }}> Today's tips </span>
-                                <span className="text-400">- Read and Complete to 💰Earn</span>{' '}
+                                <span className="text-400">- Read and Complete to 💰Earn.</span>
                             </h5>
-                            <Accordion activeIndex={0}>
-                                <AccordionTab header="Tip 1  Removing Atletes foot Problem">
-                                    {/* <p style={{ color: '#22C55E' }}>Read and press complete button to get Bonus!</p> */}
+                            <span className="text-sm text-600 py-3">Expand to read</span>
+                            <Accordion>
+                                <AccordionTab header="Tip 1">
                                     <p>
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
                                         ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
@@ -59,6 +59,11 @@ const index = () => {
                             </Accordion>
                         </div>
                     </div>
+                    <div className="col-12 md:col-6">
+                <div className="card">
+                    <h5>Panel</h5>
+                </div>
+            </div>
                     <hr />
                     <div className="py-5">
                         <Footer />

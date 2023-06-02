@@ -120,7 +120,7 @@ const index = (props) => {
                             </div>
                         </div>
 
-                        <div className="col-12 xl:col-4">
+                        <div className="col-12 xl:col-4 h-full">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Recent Invitations</div>
                                 <ul className="list-none p-0 m-0">
@@ -155,7 +155,7 @@ const index = (props) => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-12 xl:col-8">
+                        <div className="col-12 xl:col-8 h-full">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Total users you invited</div>
                                 <DataTable
