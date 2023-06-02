@@ -1,0 +1,13 @@
+.p-scrollpanel.apiClaimScroll .p-scrollpanel-wrapper {
+    border-right: 10px solid var(--surface-ground);
+}
+
+.p-scrollpanel.apiClaimScroll .p-scrollpanel-bar {
+    background-color: var(--primary-300);
+    opacity: 1;
+    transition: background-color .3s;
+}
+
+.p-scrollpanel.apiClaimScroll .p-scrollpanel-bar:hover {
+    background-color: var(--primary-400);
+}

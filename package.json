@@ -1,0 +1,48 @@
+{
+    "name": "apollo-react",
+    "version": "8.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "export": "next build && next export",
+        "lint": "next lint",
+        "format": "prettier --write \"**/**/*.{js,ts,tsx}\""
+    },
+    "dependencies": {
+        "@babel/core": "^7.20.2",
+        "@fullcalendar/core": "^5.11.2",
+        "@fullcalendar/daygrid": "^5.11.2",
+        "@fullcalendar/interaction": "^5.11.2",
+        "@fullcalendar/react": "^5.11.2",
+        "@fullcalendar/timegrid": "^5.11.2",
+        "axios": "^1.3.4",
+        "babel-plugin-transform-require-ignore": "^0.1.1",
+        "chart.js": "^3.9.1",
+        "formik": "^2.2.9",
+        "lodash": "^4.17.21",
+        "next": "12.3.1",
+        "next-transpile-modules": "^10.0.0",
+        "primeflex": "^3.2.1",
+        "primeicons": "^6.0.1",
+        "primereact": "^8.7.3",
+        "quill": "^1.3.7",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-hook-form": "^7.43.8",
+        "react-modal": "^3.16.1",
+        "react-phone-input-2": "^2.15.1",
+        "react-phone-number-input": "^3.2.19",
+        "react-secure-storage": "^1.2.2",
+        "react-spinners": "^0.13.8",
+        "yup": "^1.0.2",
+        "zustand": "^4.3.7"
+    },
+    "devDependencies": {
+        "eslint": "8.21.0",
+        "eslint-config-next": "12.2.4",
+        "prettier": "2.7.1",
+        "sass": "^1.54.4"
+    }
+}

@@ -1,0 +1,25 @@
+.Modal {
+    position: absolute;
+    top: 9%;
+    left: 45%;
+    right: 45%;
+    bottom: 83%;
+    border: "none";
+    text-align: center;
+    border-radius: 5%;
+    opacity: 1.1!important;
+    background-color: black!important;
+    padding: 1%;
+    display: flex;
+  }
+
+  .Overlay {
+    position: fixed;
+    top: 0;
+    border: "none";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black!important;
+    opacity: 0.6;
+  }

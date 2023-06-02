@@ -1,0 +1,26 @@
+User-agent: Google
+Disallow: /login
+Disallow: /company
+Disallow: /visa-extension
+Disallow: *?
+
+User-agent: googlebot
+Disallow: /login
+Disallow: /company
+Disallow: /visa-extension
+Disallow: *?
+
+User-agent: Bingbot
+Disallow: /login
+Disallow: /company
+Disallow: /visa-extension
+Disallow: *?
+
+User-agent: msnbot
+Disallow: /login
+Disallow: /company
+Disallow: /visa-extension
+Disallow: *?
+
+User-agent: *
+Disallow: /

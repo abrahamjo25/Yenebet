@@ -1,0 +1,51 @@
+.input-phone-number input{
+    height: 40px !important;
+    border: 1px solid gray !important;
+}
+.error-label{
+  color: red;
+}
+.error-input{
+    border:1px solid red;
+    border-radius: 5px;
+}
+.login-btn:hover{
+ 
+  background-color: #2b8b6d !important;
+}
+.login-btn{
+  border: none;
+}
+.p-inputtext:focus,.p-inputtext:hover,.PhoneInputInput:focus,.p-inputtext:hover,.p-multiselect:focus,.p-multiselect:hover {
+ 
+  border: 1px solid #2b8b6d !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+/* .PhoneInputInput:focus,.p-inputtext:hover{
+ 
+  border: 1px solid #2b8b6d !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+} */
+/* .p-inputtext:valid {
+ 
+  border: 1px solid #2b8b6d !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+} */
+/* .p-inputtext:focus:required:valid{
+  border: 1px solid #2b8b6d !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+} */
+.p-inputtext[value]:not([value=""]),.PhoneInputInput[value]:not([value=""]){
+  border: 1px solid #2b8b6d !important;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}

@@ -1,0 +1,53 @@
+stages:
+  - install_dependencies
+  - test
+  - version
+  - build
+  - security-scan
+  - release
+  - deploy
+
+include:
+  # Building docker image 
+  - project: 'identityserver/infra/cicd-configs'
+    ref: main
+    file: '/build-docker-to-acr.yml'
+    
+  # Container sec docker image 
+  - project: 'identityserver/infra/cicd-configs'
+    ref: main
+    file: '/container-sec-scan.yml'
+
+  # Tag and creating release
+  - project: 'identityserver/infra/cicd-configs'
+    ref: main
+    file: '/tag-and-release.yml'
+
+  # Update the helm manifest file with the new build
+  - project: 'identityserver/infra/cicd-configs'
+    ref: main
+    file: '/update-helm.yml'
+
+
+build:
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_FILE: "Dockerfile"
+
+  image: docker:20.10.16
+  stage: build
+  services:
+    - name: docker:20.10.16-dind
+
+  cache:
+    key: $CI_PROJECT_DIR
+    paths:
+      - node_modules/
+  before_script:
+    - source ./.fe_env
+    - apk add moreutils && apk add gettext
+    - mkdir ~/.docker || true
+    - echo "$DOCKER_AUTH_CONFIG" > ~/.docker/config.json
+    - envsubst < "Dockerfile" | sponge "Dockerfile"
