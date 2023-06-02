@@ -130,7 +130,7 @@ const index = (props) => {
                                     <Column field="name" header="Invited User" body="" className="p-column-title"></Column>
                                     <Column field="package" header="Package(ETB)" body="" className="p-column-title"></Column>
                                     <Column field="bonus" header="Your Bonus(ETB)" body="" className="p-column-title"></Column>
-                                </DataTable>{' '}
+                                </DataTable>
                             </div>
                         </div>
 
