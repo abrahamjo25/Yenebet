@@ -20,7 +20,7 @@ const index = () => {
                 <div className="card">
                     <Header />
                     <div className="surface-0">
-                        <div className="text-900 font-bold text-6xl mb-4 text-center">Package Plans</div>
+                        <div className="text-900 font-bold text-4xl mb-4 text-center">Package Plans</div>
                         <div className="text-700 text-xl mb-6 text-center line-height-3">
                             <span style={{ color: '#6366F1' }}> Yene</span>Bet is the most powerfull and convenient digital software which gives you usefull packages{' '}
                         </div>

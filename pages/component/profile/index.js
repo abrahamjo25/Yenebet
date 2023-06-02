@@ -26,19 +26,6 @@ const index = (props) => {
                 <div className="card">
                     <Header />
                     <div className="grid">
-                        <div className="col-12">
-                            <div className="flex flex-column sm:flex-row align-items-center gap-4">
-                                <div className="flex flex-column sm:flex-row align-items-center gap-3">
-                                    <div className="flex flex-column align-items-center sm:align-items-start">
-                                        <span className="text-900 font-bold text-2xl">Welcome Daniel</span>
-                                    </div>
-                                </div>
-                                <div className="flex gap-2 sm:ml-auto">
-                                    <p>Contact us on Telegram</p>
-                                    <Button type="button" tooltip="Send" tooltipOptions={{ position: 'bottom' }} icon="pi pi-send" className="p-button-rounded"></Button>
-                                </div>
-                            </div>
-                        </div>
                         <div className="col-12 md:col-6 xl:col-4">
                             <div className="card h-full relative overflow-hidden">
                                 <svg id="visual" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" className="absolute left-0 top-0 h-full w-full z-1" preserveAspectRatio="none">
