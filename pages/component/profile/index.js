@@ -156,7 +156,7 @@ const index = (props) => {
                         <div className="col-12 lg:col-6">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">
-                                    <b>⚠️ Cuation! </b>
+                                    <b>⚠️ Caution! </b>
                                 </div>
 
                                 <p>Use your link only to invite a friend to register on your behalf</p>
