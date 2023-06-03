@@ -1,11 +1,35 @@
 import getConfig from 'next/config';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../footer';
 import Header from '../header';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
+import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 const index = (props) => {
+    let empityResult = {
+        BankType: '',
+        AccountNumber: '',
+        AccountOwner: '',
+        Amount: ''
+    };
+    const [state, setState] = useState({
+        value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
+        copied: false
+    });
+    const [buttonText, setButtonText] = useState('Copy');
+    const [result, setResult] = useState(empityResult);
+    const [withdraw, setWithdrawDialog] = useState(false);
+    const [filteredBankType, setFilteredBankType] = useState(null);
+    let bankTypes = [
+        { name: 'Commertial Bank', value: '1' },
+        { name: 'Bank of Abyssinia', value: '2' },
+        { name: 'Awash Bank ', value: '3' },
+        { name: 'Dashen Bank', value: '4' }
+    ];
     useEffect(() => {}, []);
     const rowCount = (rowData, props) => {
         let index = parseInt(props.rowIndex + 1, 10);
@@ -20,6 +44,37 @@ const index = (props) => {
         { name: 'Dani', package: '10000', bonus: '3500' },
         { name: 'Birhan', package: '8000', bonus: '2800' }
     ];
+    const withdrawTrsDialog = () => {
+        setWithdrawDialog(true);
+    };
+    const hidewithdrawTrsDialog = () => {
+        setWithdrawDialog(false);
+    };
+    const inputChange = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _result = { ...result };
+        _result[`${name}`] = val;
+        setResult(_result);
+    };
+    const OndropdawnChange = (e, name) => {
+        debugger;
+        const val = (e.target && e.target.value) || '';
+        let _result = { ...result };
+        _result[`${name}`] = val;
+        setFilteredBankType(val);
+        setResult(_result);
+    };
+    const withdrawDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hidewithdrawTrsDialog} />
+            <Button label="Withdraw" icon="pi pi-check" className="login-btn" raised onClick={''} />
+        </>
+    );
+    const textCopied = () => {
+        setState({ copied: true });
+        setState({ value: state.value });
+        setButtonText('Copied!');
+    };
     return (
         <React.Fragment>
             <div className="col-12">
@@ -71,12 +126,12 @@ const index = (props) => {
                             <div className="card h-full flex flex-column align-items-center justify-content-center">
                                 <span className="text-900 text-lg mb-4 font-medium">The minimum threshold to withdraw money is 300 ETB</span>
                                 <div className="py-3">
-                                    <Button icon="pi pi-external-link" label="Withdraw" />
+                                    <Button icon="pi pi-external-link" label="Withdraw" onClick={withdrawTrsDialog} />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="col-12 xl:col-4">
+                        <div className="col-12 xl:col-4 h-full">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Recent Invitations</div>
                                 <ul className="list-none p-0 m-0">
@@ -101,17 +156,10 @@ const index = (props) => {
                                         </div>
                                         <span className="text-sm text-900 ml-auto font-semibold">yesterday</span>
                                     </li>
-                                    <li className="flex align-items-center p-3 mb-3 border-bottom-1 surface-border">
-                                        <div className="flex flex-column">
-                                            <span className="text-sm font-medium text-900 mb-1">You</span>
-                                            <span>Invited Degu</span>
-                                        </div>
-                                        <span className="text-sm text-900 ml-auto font-semibold">1 day ago</span>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-12 xl:col-8">
+                        <div className="col-12 xl:col-8 h-full">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Total users you invited</div>
                                 <DataTable
@@ -133,7 +181,27 @@ const index = (props) => {
                                 </DataTable>
                             </div>
                         </div>
-
+                        <Dialog visible={withdraw} style={{ width: '450px' }} header={'Withdraw '} modal className="p-fluid" footer={withdrawDialogFooter} onHide={hidewithdrawTrsDialog}>
+                            <div className="p-fluid card mt-2 ">
+                                <div className="field">
+                                    <br />
+                                    <label htmlFor="BankType">Account Type*</label>
+                                    <Dropdown id="BankType" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="Select Bank Type" />
+                                </div>
+                                <div className="field">
+                                    <label htmlFor="AccountNumber">Account Number *</label>
+                                    <InputText id="AccountNumber" type="number" value={result.AccountNumber} onChange={(e) => inputChange(e, 'AccountNumber')} required />
+                                </div>
+                                <div className="field">
+                                    <label htmlFor="AccountOwner">Account Holder Name *</label>
+                                    <InputText id="AccountOwner" value={result.AccountOwner} onChange={(e) => inputChange(e, 'AccountOwner')} required />
+                                </div>
+                                <div className="field">
+                                    <label htmlFor="Amount">Amount *</label>
+                                    <InputText id="Amount" type="number" value={result.Amount} onChange={(e) => inputChange(e, 'Amount')} required />
+                                </div>
+                            </div>
+                        </Dialog>
                         <div className="col-12 lg:col-6">
                             <div className="card h-full">
                                 <div className="flex align-items-center justify-content-between mb-3">
@@ -145,7 +213,11 @@ const index = (props) => {
                                             <p>
                                                 🙏 Copy and invite the below link to your best friends, family or any user.
                                                 <br />
-                                                <a href="#"> https://www.yenebet.com/search?q=primereact+marigin+left&rlz=1C1GCEU</a>
+                                                <a href="">{state.value}</a>
+                                                <br />
+                                                <CopyToClipboard text={state.value} onCopy={() => textCopied()}>
+                                                    <button>{buttonText}</button>
+                                                </CopyToClipboard>
                                             </p>
                                         </div>
                                     </div>
@@ -156,7 +228,7 @@ const index = (props) => {
                         <div className="col-12 lg:col-6">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">
-                                    <b>⚠️ Caution! </b>
+                                    <b>⚠️ Cuation! </b>
                                 </div>
 
                                 <p>Use your link only to invite a friend to register on your behalf</p>
