@@ -3,29 +3,23 @@ import AppSubMenu from './AppSubMenu';
 const AppMenu = () => {
     const model = [
         {
-            icon: 'pi pi-home',
+            label: '',
+            icon: '',
             items: [
                 {
                     label: 'Home',
-                    icon: 'pi pi-fw pi-home',
+                    icon: 'pi pi-fw pi-home text-xl',
                     to: '/dashboard'
-                }
-            ]
-        },
-        {
-            label: 'Management',
-            icon: 'pi pi-th-large',
-            items: [
+                },
                 {
-                    label: 'Account Managment',
-                    icon: '',
+                    label: 'Management',
+                    icon: 'pi pi-th-large',
                     items: [
                         {
                             label: 'Users',
                             icon: 'pi pi-fw pi-user',
                             to: '/management/users'
                         },
-
                         {
                             label: 'Clients',
                             icon: 'pi pi-fw pi-comments',

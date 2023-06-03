@@ -166,8 +166,8 @@ const index = (props) => {
                                     value={user}
                                     dataKey="id"
                                     paginator
-                                    rows={4}
-                                    rowsPerPageOptions={[4, 15, 25]}
+                                    rows={3}
+                                    rowsPerPageOptions={[3, 9, 15]}
                                     className="datatable-responsive"
                                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} results"
