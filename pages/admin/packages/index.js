@@ -2,14 +2,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import PackageService from '../../../services/PackageService';
 import { DataTable } from 'primereact/datatable';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 import { Column } from 'primereact/column';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+
 import { Ripple } from 'primereact/ripple';
 export default function index() {
+    let emptyResult = {
+        packageName: '',
+        description: '',
+        packageAmount: 0,
+        noTask: 0,
+        taskValue: 0
+    };
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
-    const [result, setResult] = useState(null);
+    const [resultDialog, setResultDialog] = useState(false);
+    const [waiting, setWaiting] = useState(false);
+    const [result, setResult] = useState(emptyResult);
+    const [submitted, setSubmitted] = useState(false);
+
     const service = new PackageService();
     const toast = useRef(null);
     useEffect(() => {
@@ -26,24 +41,55 @@ export default function index() {
                 setLoading(false);
             });
     }, []);
-    const addNewRoleBtn = () => {
+
+    const openNew = () => {
+        setResult(emptyResult);
+        setSubmitted(false);
+        setResultDialog(true);
+    };
+
+    const hideDialog = () => {
+        setSubmitted(false);
+        setResultDialog(false);
+        setResult(emptyResult);
+    };
+    const saveResult = () => {
+        debugger;
+        service
+            .createPackage(result)
+            .then((res) => {
+                setLoading(true);
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Success Message',
+                    detail: 'Successfully added a new Client',
+                    life: 4000
+                });
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+            })
+            .finally(() => {
+                // setResult(emptyResult);
+            });
+    };
+    const onInputChange = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _result = { ...result };
+        _result[`${name}`] = val;
+        setResult(_result);
+    };
+    const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button icon="pi pi-plus" label="New" className="login-btn " style={{ backgroundColor: '#20a77c' }}>
-                        <Ripple />
-                    </Button>
+                    <Button label="Create New" icon="pi pi-plus" onClick={openNew} />
                 </div>
             </React.Fragment>
         );
     };
-
-    const searchInput = () => {
-        return (
-            <span className="flex gap-4">
-                <span className="p-input-icon-left flex"></span>
-            </span>
-        );
+    const rightToolbarTemplate = () => {
+        return <></>;
     };
     const actionBodyTemplate = (rowData) => {
         return (
@@ -53,10 +99,16 @@ export default function index() {
             </div>
         );
     };
+    const resultDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideDialog} />
+            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" className="btn-danger" onClick={saveResult} />}
+        </>
+    );
     return (
         <>
             <Toast ref={toast} />
-            <Toolbar className="mb-4" left={addNewRoleBtn} right={searchInput} />
+            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate} />
             <DataTable
                 value={results}
                 paginator
@@ -78,6 +130,43 @@ export default function index() {
                 <Column field="taskValue" header="Task Value" />
                 <Column header="Action" body={actionBodyTemplate} />
             </DataTable>
+            <Dialog visible={resultDialog} style={{ width: '700px' }} header="" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>
+                <div className="card p-fluid">
+                    <h4 className="text-center">Packages</h4>
+                    <div className="formgrid grid">
+                        <div className="field col">
+                            <label htmlFor="packageName">Package Name</label>
+                            <InputText id="packageName" value={result.packageName} onChange={(e) => onInputChange(e, 'packageName')} required className={classNames({ 'p-invalid': submitted && !result.packageName })} />
+                            {submitted && !result.packageName && <small className="p-invalid text-danger">packageName is required.</small>}
+                        </div>
+                        <div className="field col">
+                            <label htmlFor="description">description</label>
+                            <InputText id="description" value={result.description} onChange={(e) => onInputChange(e, 'description')} required className={classNames({ 'p-invalid': submitted && !result.description })} />
+                            {submitted && !result.description && <small className="p-invalid text-danger">description is required.</small>}
+                        </div>
+                    </div>
+                    <div className="formgrid grid">
+                        <div className="field col">
+                            <label htmlFor="packageAmount">packageAmount</label>
+                            <InputText type="number" id="packageAmount" value={result.packageAmount} onChange={(e) => onInputChange(e, 'packageAmount')} required className={classNames({ 'p-invalid': submitted && !result.packageAmount })} />
+                            {submitted && !result.packageAmount && <small className="p-invalid text-danger">packageAmount is required.</small>}
+                        </div>
+
+                        <div className="field col">
+                            <label htmlFor="noTask">noTask</label>
+                            <InputText id="noTask" type="number" value={result.noTask} onChange={(e) => onInputChange(e, 'noTask')} required className={classNames({ 'p-invalid': submitted && !result.noTask })} />
+                            {submitted && !result.noTask && <small className="p-invalid text-danger">noTask is required.</small>}
+                        </div>
+                    </div>
+                    <div className="formgrid grid">
+                        <div className="field col">
+                            <label htmlFor="taskValue">taskValue</label>
+                            <InputText id="taskValue" type="number" value={result.taskValue} onChange={(e) => onInputChange(e, 'taskValue')} required className={classNames({ 'p-invalid': submitted && !result.taskValue })} />
+                            {submitted && !result.taskValue && <small className="p-invalid text-danger">taskValue is required.</small>}
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
         </>
     );
 }
