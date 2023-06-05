@@ -9,7 +9,7 @@ const AppSidebar = () => {
         <>
             <Link href="/dashboard" legacyBehavior>
                 <a className="app-logo -mt-2">
-                <Image src={yenebet} height={65} width={250} alt="Logo" />
+                <Image src={yenebet} height={55} width={200} alt="Logo" />
 
                     {/* <img src="/layout/images/AdmasUn.png" height="80%" width=" 350px" className="" /> */}
                 </a>

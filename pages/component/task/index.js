@@ -59,11 +59,7 @@ const index = () => {
                             </Accordion>
                         </div>
                     </div>
-                    <div className="col-12 md:col-6">
-                <div className="card">
-                    <h5>Panel</h5>
-                </div>
-            </div>
+                    <div className="col-12 md:col-6"></div>
                     <hr />
                     <div className="py-5">
                         <Footer />

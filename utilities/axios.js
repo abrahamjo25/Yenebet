@@ -90,7 +90,7 @@ const logoutUser = () => {
 };
 
 const axiosInstance = axios.create({
-    baseURL: baseURL,
+    baseURL: 'https://localhost:7294/api',
     headers: {
         'Access-Control-Allow-Credentials': true,
         'access-control-allow-origin': '*',

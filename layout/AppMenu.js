@@ -9,7 +9,7 @@ const AppMenu = () => {
                 {
                     label: 'Home',
                     icon: 'pi pi-fw pi-home text-xl',
-                    to: '/dashboard'
+                    to: '/'
                 },
                 {
                     label: 'Management',
@@ -34,7 +34,7 @@ const AppMenu = () => {
                 },
                 {
                     label: 'Packages',
-                    icon: 'pi pi-fw pi-home',
+                    icon: 'pi pi-database text-lg',
                     to: '/admin/packages'
                 }
             ]
