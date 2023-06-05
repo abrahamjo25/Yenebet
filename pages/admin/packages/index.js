@@ -9,6 +9,7 @@ import { Ripple } from 'primereact/ripple';
 export default function index() {
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
+    const [result, setResult] = useState(null);
     const service = new PackageService();
     const toast = useRef(null);
     useEffect(() => {
