@@ -36,6 +36,11 @@ const AppMenu = () => {
                     label: 'Packages',
                     icon: 'pi pi-database text-lg',
                     to: '/admin/packages'
+                },
+                {
+                    label: 'Records',
+                    icon: 'pi pi-folder-open text-lg',
+                    to: '/admin/records'
                 }
             ]
         }
