@@ -3,29 +3,23 @@ import AppSubMenu from './AppSubMenu';
 const AppMenu = () => {
     const model = [
         {
-            icon: 'pi pi-home',
+            label: '',
+            icon: '',
             items: [
                 {
                     label: 'Home',
-                    icon: 'pi pi-fw pi-home',
-                    to: '/dashboard'
-                }
-            ]
-        },
-        {
-            label: 'Management',
-            icon: 'pi pi-th-large',
-            items: [
+                    icon: 'pi pi-fw pi-home text-xl',
+                    to: '/'
+                },
                 {
-                    label: 'Account Managment',
-                    icon: '',
+                    label: 'Management',
+                    icon: 'pi pi-th-large',
                     items: [
                         {
                             label: 'Users',
                             icon: 'pi pi-fw pi-user',
                             to: '/management/users'
                         },
-
                         {
                             label: 'Clients',
                             icon: 'pi pi-fw pi-comments',
@@ -40,7 +34,7 @@ const AppMenu = () => {
                 },
                 {
                     label: 'Packages',
-                    icon: 'pi pi-fw pi-home',
+                    icon: 'pi pi-database text-lg',
                     to: '/admin/packages'
                 }
             ]

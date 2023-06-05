@@ -8,6 +8,7 @@ import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 const index = (props) => {
     let empityResult = {
         BankType: '',
@@ -15,6 +16,11 @@ const index = (props) => {
         AccountOwner: '',
         Amount: ''
     };
+    const [state, setState] = useState({
+        value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
+        copied: false
+    });
+    const [buttonText, setButtonText] = useState('Copy');
     const [result, setResult] = useState(empityResult);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
@@ -65,6 +71,11 @@ const index = (props) => {
             <Button label="Withdraw" icon="pi pi-check" className="login-btn" raised onClick={''} />
         </>
     );
+    const textCopied = () => {
+        setState({ copied: true });
+        setState({ value: state.value });
+        setButtonText('Copied!');
+    };
     return (
         <React.Fragment>
             <div className="col-12">
@@ -146,13 +157,6 @@ const index = (props) => {
                                         </div>
                                         <span className="text-sm text-900 ml-auto font-semibold">yesterday</span>
                                     </li>
-                                    <li className="flex align-items-center p-3 mb-3 border-bottom-1 surface-border">
-                                        <div className="flex flex-column">
-                                            <span className="text-sm font-medium text-900 mb-1">You</span>
-                                            <span>Invited Degu</span>
-                                        </div>
-                                        <span className="text-sm text-900 ml-auto font-semibold">1 day ago</span>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -163,8 +167,8 @@ const index = (props) => {
                                     value={user}
                                     dataKey="id"
                                     paginator
-                                    rows={4}
-                                    rowsPerPageOptions={[4, 15, 25]}
+                                    rows={3}
+                                    rowsPerPageOptions={[3, 9, 15]}
                                     className="datatable-responsive"
                                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} results"
@@ -210,7 +214,11 @@ const index = (props) => {
                                             <p>
                                                 🙏 Copy and invite the below link to your best friends, family or any user.
                                                 <br />
-                                                <a href="#"> https://www.yenebet.com/search?q=primereact+marigin+left&rlz=1C1GCEU</a>
+                                                <a href="">{state.value}</a>
+                                                <br />
+                                                <CopyToClipboard text={state.value} onCopy={() => textCopied()}>
+                                                    <button>{buttonText}</button>
+                                                </CopyToClipboard>
                                             </p>
                                         </div>
                                     </div>

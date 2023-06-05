@@ -94,7 +94,7 @@ function Header({}) {
                     <div className="flex gap-2 sm:ml-auto">
                         <p>Contact us on Telegram</p>
                         <a target="_blank" href="https://t.me/yenebet2023" rel="noopener noreferrer">
-                            <Button type="button" tooltip="Send" tooltipOptions={{ position: 'bottom' }} icon="pi pi-send" className="p-button-rounded" />
+                            <Button type="button" tooltip="Press" tooltipOptions={{ position: 'bottom' }} icon="pi pi-send" className="p-button-rounded p-button-info" />
                         </a>
                     </div>
                 </div>

@@ -39,9 +39,6 @@ class HttpService {
     static getService = (relativePath, queryString = '') => {
         return axiosInstance.get(relativePath, {
             params: queryString,
-            headers: {
-                serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8'
-            }
         });
     };
 
