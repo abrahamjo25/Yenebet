@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../footer';
 import Header from '../header';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import ProfileService from '../../../services/profileService';
+import { useRef } from 'react';
 const index = (props) => {
     let empityResult = {
         BankType: '',
@@ -20,10 +23,14 @@ const index = (props) => {
         value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
         copied: false
     });
+    const [loading, setLoading] = useState(false);
     const [buttonText, setButtonText] = useState('Copy');
     const [result, setResult] = useState(empityResult);
+    const [results, setResults] = useState(null);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
+
+    const toast = useRef(null);
     let bankTypes = [
         { name: 'Commertial Bank', value: '1' },
         { name: 'Bank of Abyssinia', value: '2' },
@@ -31,7 +38,21 @@ const index = (props) => {
         { name: 'Dashen Bank', value: '4' }
     ];
     useEffect(() => {
-        
+        const service = new ProfileService();
+        setLoading(true);
+        service
+            .getProfile()
+            .then((res) => {
+                if (res) {
+                    setResults(res.data);
+                }
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
     const rowCount = (rowData, props) => {
         let index = parseInt(props.rowIndex + 1, 10);
@@ -78,11 +99,16 @@ const index = (props) => {
         setState({ value: state.value });
         setButtonText('Copied!');
     };
+    const bonusBodyTamplate = (rowData) => {
+        return <>{rowData.packages.packageAmount * (process.env.NEXT_PUBLIC_API_SERVICE_GAIN_PERCENT / 100)}</>;
+    };
     return (
         <React.Fragment>
             <div className="col-12">
                 <div className="card">
                     <Header />
+                    <Toast ref={toast} />
+                    {loading ? '' : ''}
                     <div className="grid">
                         <div className="col-12 md:col-6 xl:col-4">
                             <div className="card h-full relative overflow-hidden">
@@ -166,10 +192,11 @@ const index = (props) => {
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Total users you invited</div>
                                 <DataTable
-                                    value={user}
+                                    value={results}
                                     dataKey="id"
                                     paginator
                                     rows={3}
+                                    loading={loading}
                                     rowsPerPageOptions={[3, 9, 15]}
                                     className="datatable-responsive"
                                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -178,9 +205,10 @@ const index = (props) => {
                                     responsiveLayout="scroll"
                                 >
                                     <Column header="No" className="p-column-title" body={rowCount}></Column>
-                                    <Column field="name" header="Invited User" body="" className="p-column-title"></Column>
-                                    <Column field="package" header="Package(ETB)" body="" className="p-column-title"></Column>
-                                    <Column field="bonus" header="Your Bonus(ETB)" body="" className="p-column-title"></Column>
+                                    <Column field="fullName" header="Invited User" body="" className="p-column-title"></Column>
+                                    <Column field="packages.packageName" header="Package" body="" className="p-column-title"></Column>
+                                    <Column field="packages.packageAmount" header="Price(ETB)" body="" className="p-column-title"></Column>
+                                    <Column field="bonus" header="Your Bonus(ETB)" body={bonusBodyTamplate} className="p-column-title"></Column>
                                 </DataTable>
                             </div>
                         </div>
