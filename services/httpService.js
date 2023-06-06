@@ -1,22 +1,24 @@
 import axiosInstance from '../utilities/axios';
 
 class HttpService {
-    static postService = (requestData, relativePath, queryString = '',idToken,accessToken,clientClaim) => {
-        return axiosInstance.post(relativePath + queryString, requestData, {
-            headers: {
-                serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8',
-                // idToken:localStorage.getItem("idToken"),
-                // accessToken:localStorage.getItem("accessToken"),
-                // clientClaim:clientClaim
-            }
+    static postService = (path, data) => {
+        debugger;
+        return axiosInstance.post(path, data, {
+            // headers: {
+            //     serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8',
+            //     idToken:localStorage.getItem("idToken"),
+            //     accessToken:localStorage.getItem("accessToken"),
+            //     clientClaim:clientClaim
+            // }
         });
     };
 
-    static putService = (requestData, relativePath, queryString = '', clientClaim) => {
-        return axiosInstance.put(relativePath + queryString, requestData, {
-            headers: {
-                serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8'
-            }
+    static putService = (Path, Data) => {
+        debugger;
+        return axiosInstance.put(Path, Data, {
+            // headers: {
+            //     serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8'
+            // }
         });
     };
 
@@ -38,7 +40,7 @@ class HttpService {
 
     static getService = (relativePath, queryString = '') => {
         return axiosInstance.get(relativePath, {
-            params: queryString,
+            params: queryString
         });
     };
 
