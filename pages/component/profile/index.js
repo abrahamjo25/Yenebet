@@ -30,7 +30,9 @@ const index = (props) => {
         { name: 'Awash Bank ', value: '3' },
         { name: 'Dashen Bank', value: '4' }
     ];
-    useEffect(() => {}, []);
+    useEffect(() => {
+        
+    }, []);
     const rowCount = (rowData, props) => {
         let index = parseInt(props.rowIndex + 1, 10);
         return (
