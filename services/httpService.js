@@ -13,7 +13,7 @@ class HttpService {
         });
     };
 
-    static putService = (Data, Path) => {
+    static putService = (Path, Data) => {
         debugger;
         return axiosInstance.put(Path, Data, {
             // headers: {
