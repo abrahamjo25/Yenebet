@@ -23,6 +23,7 @@ export default function index() {
     const [results, setResults] = useState(null);
     const [editableData, setEditableData] = useState(null);
     const [resultDialog, setResultDialog] = useState(false);
+    const [resultDeleteDialog, setResultDeleteDialog] = useState(false);
     const [resultNewDialog, setResultNewDialog] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const [result, setResult] = useState(emptyResult);
@@ -67,11 +68,19 @@ export default function index() {
         setEditableData(rowData);
         setResultDialog(true);
     };
+    const confirmDeleteResult = (rowData) => {
+        setEditableData(rowData);
+        setResultDeleteDialog(true);
+        setEditableData(rowData);
+    };
 
     const hideDialog = () => {
         setSubmitted(false);
         setResultDialog(false);
         setResult(emptyResult);
+    };
+    const hideDeleteResultDialog = () => {
+        setResultDeleteDialog(false);
     };
     const saveResult = () => {
         debugger;
@@ -120,6 +129,31 @@ export default function index() {
                 // setResult(emptyResult);
             });
     };
+    const deleteResult = () => {
+        debugger;
+        let Id = editableData.id;
+        service
+            .deletePackage(Id, '')
+            .then((res) => {
+                setLoading(true);
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Success Message',
+                    detail: 'Successfully Deleted',
+                    life: 4000
+                });
+                refreashTable();
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+            })
+            .finally(() => {
+                setResultDeleteDialog(false);
+
+                // setResult(emptyResult);
+            });
+    };
+
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
@@ -142,7 +176,7 @@ export default function index() {
         return (
             <div className="actions">
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning pl-1 mr-2" onClick={() => editResult(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger pl-1 mr-2" />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger pl-1 mr-2" onClick={() => confirmDeleteResult(rowData)} />
             </div>
         );
     };
@@ -150,6 +184,12 @@ export default function index() {
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideDialog} />
             {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" className="btn-danger" onClick={resultNewDialog ? saveResult : updateResult} />}
+        </>
+    );
+    const deleteResultDialogFooter = (
+        <>
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteResultDialog} />
+            {waiting ? <Button label="Deleting" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Yes" icon="pi pi-check" className="" onClick={deleteResult} />}
         </>
     );
     return (
@@ -212,6 +252,16 @@ export default function index() {
                             {submitted && !result.taskValue && <small className="p-invalid text-danger">taskValue is required.</small>}
                         </div>
                     </div>
+                </div>
+            </Dialog>
+            <Dialog visible={resultDeleteDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteResultDialogFooter} onHide={hideDeleteResultDialog}>
+                <div className="flex align-items-center justify-content-center">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    {result && (
+                        <span>
+                            Are you sure you want to delete <b>{result.Divisioncode}</b>?
+                        </span>
+                    )}
                 </div>
             </Dialog>
         </>
