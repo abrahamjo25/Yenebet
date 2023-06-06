@@ -7,4 +7,8 @@ export default class PackageService {
         debugger;
         return HttpService.postService('/Package/Create', data, '');
     };
+    updatePackage = (id, data, claim) => {
+        debugger;
+        return HttpService.putService('/Package/Update/?id=' + id, data, '');
+    };
 }

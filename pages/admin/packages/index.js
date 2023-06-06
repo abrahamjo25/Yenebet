@@ -10,6 +10,7 @@ import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 
 import { Ripple } from 'primereact/ripple';
+import { update } from 'lodash';
 export default function index() {
     let emptyResult = {
         packageName: '',
@@ -20,7 +21,9 @@ export default function index() {
     };
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
+    const [editableData, setEditableData] = useState(null);
     const [resultDialog, setResultDialog] = useState(false);
+    const [resultNewDialog, setResultNewDialog] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const [result, setResult] = useState(emptyResult);
     const [submitted, setSubmitted] = useState(false);
@@ -41,10 +44,27 @@ export default function index() {
                 setLoading(false);
             });
     }, []);
-
+    const refreashTable = () => {
+        service
+            .getPackage()
+            .then((res) => {
+                setResults(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
     const openNew = () => {
         setResult(emptyResult);
         setSubmitted(false);
+        setResultDialog(true);
+        setResultNewDialog(true);
+    };
+    const editResult = (rowData) => {
+        setEditableData(rowData);
         setResultDialog(true);
     };
 
@@ -62,14 +82,41 @@ export default function index() {
                 toast.current.show({
                     severity: 'success',
                     summary: 'Success Message',
-                    detail: 'Successfully added a new Client',
+                    detail: 'Successfully added a new Package',
                     life: 4000
                 });
+                refreashTable();
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
             })
             .finally(() => {
+                setResultDialog(false);
+
+                // setResult(emptyResult);
+            });
+    };
+    const updateResult = () => {
+        debugger;
+        let Id = editableData.id;
+        service
+            .updatePackage(Id, result)
+            .then((res) => {
+                setLoading(true);
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Success Message',
+                    detail: 'Successfully Updated',
+                    life: 4000
+                });
+                refreashTable();
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+            })
+            .finally(() => {
+                setResultDialog(false);
+
                 // setResult(emptyResult);
             });
     };
@@ -94,7 +141,7 @@ export default function index() {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning pl-1 mr-2" />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning pl-1 mr-2" onClick={() => editResult(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger pl-1 mr-2" />
             </div>
         );
@@ -102,7 +149,7 @@ export default function index() {
     const resultDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideDialog} />
-            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" className="btn-danger" onClick={saveResult} />}
+            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" className="btn-danger" onClick={resultNewDialog ? saveResult : updateResult} />}
         </>
     );
     return (

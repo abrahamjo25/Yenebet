@@ -1,9 +1,9 @@
 import axiosInstance from '../utilities/axios';
 
 class HttpService {
-    static postService = (data, relativePath, queryString = '', idToken, accessToken, clientClaim) => {
+    static postService = (path, data) => {
         debugger;
-        return axiosInstance.post(relativePath + queryString, data, {
+        return axiosInstance.post(path, data, {
             // headers: {
             //     serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8',
             //     idToken:localStorage.getItem("idToken"),
@@ -13,11 +13,12 @@ class HttpService {
         });
     };
 
-    static putService = (requestData, relativePath, queryString = '', clientClaim) => {
-        return axiosInstance.put(relativePath + queryString, requestData, {
-            headers: {
-                serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8'
-            }
+    static putService = (Data, Path) => {
+        debugger;
+        return axiosInstance.put(Path, Data, {
+            // headers: {
+            //     serviceKey: '86rIsmabiYR0OuW1B6NHovQsmWB8'
+            // }
         });
     };
 
