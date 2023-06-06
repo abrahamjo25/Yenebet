@@ -49,6 +49,7 @@ const index = (props) => {
     };
     const hidewithdrawTrsDialog = () => {
         setWithdrawDialog(false);
+        setResult(empityResult);
     };
     const inputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
