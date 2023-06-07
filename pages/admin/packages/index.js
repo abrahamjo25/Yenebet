@@ -8,7 +8,6 @@ import { Column } from 'primereact/column';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-
 import { Ripple } from 'primereact/ripple';
 import { update } from 'lodash';
 export default function index() {

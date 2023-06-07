@@ -4,15 +4,13 @@ export default class PackageService {
         return HttpService.getService('/Package/Index', '');
     };
     createPackage = (data, claim) => {
-        debugger;
         return HttpService.postService('/Package/Create', data, '');
     };
     updatePackage = (id, data, claim) => {
-        debugger;
         return HttpService.putService('/Package/Update/?id=' + id, data, '');
     };
     deletePackage = (id, data, claim) => {
         debugger;
-        return HttpService.putService('/Package/Delete/id=' + id, data, '');
+        return HttpService.putService('/Package/Delete/' + id, data, '');
     };
 }
