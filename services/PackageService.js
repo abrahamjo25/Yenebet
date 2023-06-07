@@ -13,6 +13,6 @@ export default class PackageService {
     };
     deletePackage = (id, data, claim) => {
         debugger;
-        return HttpService.putService('/Package/Delete/?id=' + id, data, '');
+        return HttpService.putService('/Package/Delete/id=' + id, data, '');
     };
 }
