@@ -1,19 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../header';
 import Footer from '../footer';
 import { Button } from 'primereact/button';
-import secureLocalStorage from 'react-secure-storage';
-import { useRouter } from 'next/router';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
+import { Dropdown } from 'primereact/dropdown';
+import { classNames } from 'primereact/utils';
 const index = () => {
-    const router = useRouter();
-    const packageDetail = (e) => {
-        let token = secureLocalStorage.getItem('idToken');
-        if (token === null || token === '') {
-            router.push('/component/register');
-        } else {
-            router.push("/component/packages/detail")
-        }
+    let emptyResult = {
+        packageName: '',
+        description: '',
+        packageAmount: 0,
+        noTask: 0,
+        taskValue: 0
     };
+    const [waiting, setWaiting] = useState(false);
+    const [result, setResult] = useState(emptyResult);
+    const [submitted, setSubmitted] = useState(false);
+    const [filteredBankType, setFilteredBankType] = useState(null);
+    const [packageDialog, setPackageDilog] = useState(false);
+    let bankTypes = [
+        { name: 'Commertial Bank', value: '1' },
+        { name: 'Bank of Abyssinia', value: '2' },
+        { name: 'Awash Bank ', value: '3' },
+        { name: 'Dashen Bank', value: '4' }
+    ];
+    const packageDetail = (e) => {
+        setPackageDilog(true);
+    };
+    const hideDialog = () => {
+        setResult(emptyResult);
+        setPackageDilog(false);
+    };
+    const saveResult = () => {};
+
     return (
         <>
             <div className="col-12">
@@ -231,6 +252,41 @@ const index = () => {
                     <hr />
                     <div className="py-7">
                         <Footer />
+                        <Dialog visible={packageDialog} style={{ width: '450px' }} header="" modal className="p-fluid" footer={''} onHide={hideDialog}>
+                            <h2 className="text-center">Place your order</h2>
+                            <h6 className="text-center">Provide your contact information to own Package</h6>
+
+                            <div className="field col">
+                                <InputText id="Name" value={result.Name} onChange={(e) => onInputChange(e, 'Name')} required placeholder="ስም / Your Name" className={classNames({ 'p-invalid': submitted && !result.Name })} />
+                                {submitted && !result.Name && <small className="p-invalid text-danger">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <InputText id="" value={result.description} onChange={(e) => onInputChange(e, 'description')} required placeholder="ሞባይል / Mobile (09...)" className={classNames({ 'p-invalid': submitted && !result.description })} />
+                                {submitted && !result.description && <small className="p-invalid text-danger">description is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <InputText id="" value={result.description} onChange={(e) => onInputChange(e, 'description')} required placeholder="ኢሜል / Email Address" className={classNames({ 'p-invalid': submitted && !result.description })} />
+                                {submitted && !result.description && <small className="p-invalid text-danger">description is required.</small>}
+                            </div>
+
+                            <div className="card p-fluid">
+                                <div className="field col">
+                                    <h6>Select Bank</h6>
+                                    <p>you can pay with internet banking or cash</p>
+                                </div>
+
+                                <div className="field col">
+                                    <Dropdown id="BankType" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="የባንክ አይነት / Bank Type" />
+                                    {/* <Dropdown id="noTask" value={result.noTask} onChange={(e) => onInputChange(e, 'noTask')} required placeholder="የባንክ አይነት / Bank Type" className={classNames({ 'p-invalid': submitted && !result.noTask })} /> */}
+                                    {submitted && !result.noTask && <small className="p-invalid text-danger">noTask is required.</small>}
+                                </div>
+                            </div>
+
+                            <div className="field col">
+                                {waiting ? <Button label="PLACE ORDER" className="p-button-warning" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="PLACE ORDER" icon="" className="p-button-warning" onClick={saveResult} />}
+                                <Button label="Go Back" icon="" className="p-button-text btn-success" onClick={hideDialog} />
+                            </div>
+                        </Dialog>
                     </div>
                 </div>
             </div>

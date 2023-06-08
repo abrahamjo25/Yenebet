@@ -14,10 +14,11 @@ import ProfileService from '../../../services/profileService';
 import { useRef } from 'react';
 const index = (props) => {
     let empityResult = {
-        BankType: '',
-        AccountNumber: '',
-        AccountOwner: '',
-        Amount: ''
+        userId: '33126',
+        userName: '',
+        amount: 0,
+        bank: '',
+        accountNumber: 0
     };
     const [state, setState] = useState({
         value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
@@ -159,7 +160,6 @@ const index = (props) => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="col-12 xl:col-4 h-full">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">Recent Invitations</div>
@@ -215,21 +215,25 @@ const index = (props) => {
                         <Dialog visible={withdraw} style={{ width: '450px' }} header={'Withdraw '} modal className="p-fluid" footer={withdrawDialogFooter} onHide={hidewithdrawTrsDialog}>
                             <div className="p-fluid card mt-2 ">
                                 <div className="field">
-                                    <br />
-                                    <label htmlFor="BankType">Account Type*</label>
-                                    <Dropdown id="BankType" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="Select Bank Type" />
+                                    <label htmlFor="userId">Account Number *</label>
+                                    <InputText id="userId" value={result.userId} onChange={(e) => inputChange(e, 'userId')} required />
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="AccountNumber">Account Number *</label>
-                                    <InputText id="AccountNumber" type="number" value={result.AccountNumber} onChange={(e) => inputChange(e, 'AccountNumber')} required />
-                                </div>
-                                <div className="field">
-                                    <label htmlFor="AccountOwner">Account Holder Name *</label>
-                                    <InputText id="AccountOwner" value={result.AccountOwner} onChange={(e) => inputChange(e, 'AccountOwner')} required />
+                                    <label htmlFor="userName">Account Holder Name *</label>
+                                    <InputText id="userName" value={result.userName} onChange={(e) => inputChange(e, 'userName')} required />
                                 </div>
                                 <div className="field">
                                     <label htmlFor="Amount">Amount *</label>
-                                    <InputText id="Amount" type="number" value={result.Amount} onChange={(e) => inputChange(e, 'Amount')} required />
+                                    <InputText id="Amount" type="number" value={result.amount} onChange={(e) => inputChange(e, 'Amount')} required />
+                                </div>
+                                <div className="field">
+                                    <br />
+                                    <label htmlFor="bank">Account Type*</label>
+                                    <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={bankTypes} optionLabel="name" required placeholder="Select Bank Type" />
+                                </div>
+                                <div className="field">
+                                    <label htmlFor="accountNumber">account Number *</label>
+                                    <InputText id="accountNumber" type="number" value={result.amount} onChange={(e) => inputChange(e, 'accountNumber')} required />
                                 </div>
                             </div>
                         </Dialog>
@@ -255,7 +259,6 @@ const index = (props) => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="col-12 lg:col-6">
                             <div className="card">
                                 <div className="text-900 text-xl font-semibold mb-3">
