@@ -41,6 +41,16 @@ const AppMenu = () => {
                     label: 'Records',
                     icon: 'pi pi-folder-open text-lg',
                     to: '/admin/records'
+                },
+                {
+                    label: 'Requests',
+                    icon: 'pi pi-clone text-lg',
+                    to: '/admin/requests'
+                },
+                {
+                    label: 'Transactions',
+                    icon: 'pi pi-tags text-lg',
+                    to: '/admin/transactions'
                 }
             ]
         }
