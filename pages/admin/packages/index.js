@@ -83,26 +83,30 @@ export default function index() {
     };
     const saveResult = () => {
         debugger;
-        service
-            .createPackage(result)
-            .then((res) => {
-                setLoading(true);
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Success Message',
-                    detail: 'Successfully added a new Package',
-                    life: 4000
-                });
-                refreashTable();
-            })
-            .catch((err) => {
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
-            })
-            .finally(() => {
-                setResultDialog(false);
+        setSubmitted(false);
+        if (result.packageName && result.description) {
+            setSubmitted(true);
+            service
+                .createPackage(result)
+                .then((res) => {
+                    setLoading(true);
+                    toast.current.show({
+                        severity: 'success',
+                        summary: 'Success Message',
+                        detail: 'Successfully added a new Package',
+                        life: 4000
+                    });
+                    refreashTable();
+                })
+                .catch((err) => {
+                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+                })
+                .finally(() => {
+                    setResultDialog(false);
 
-                // setResult(emptyResult);
-            });
+                    // setResult(emptyResult);
+                });
+        }
     };
     const updateResult = () => {
         debugger;
