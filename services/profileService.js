@@ -4,4 +4,7 @@ export default class ProfileService {
         let userId = '33125';
         return HttpService.getService('/Invitation/Index?userId=' + userId, '');
     };
+    createRequest = (data, claim) => {
+        return HttpService.postService('/Request/Create', data, '');
+    };
 }

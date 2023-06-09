@@ -12,6 +12,8 @@ import { InputText } from 'primereact/inputtext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ProfileService from '../../../services/profileService';
 import { useRef } from 'react';
+import PackageService from '../../../services/PackageService';
+import { InputNumber } from 'primereact/inputnumber';
 const index = (props) => {
     let empityResult = {
         userId: '33126',
@@ -38,8 +40,9 @@ const index = (props) => {
         { name: 'Awash Bank ', value: '3' },
         { name: 'Dashen Bank', value: '4' }
     ];
+
+    const service = new ProfileService();
     useEffect(() => {
-        const service = new ProfileService();
         setLoading(true);
         service
             .getProfile()
@@ -75,7 +78,46 @@ const index = (props) => {
         setWithdrawDialog(false);
         setResult(empityResult);
     };
+    const saveResult = () => {
+        debugger;
+        if (result.userName && result.amount) {
+            service
+                .createRequest(result)
+                .then((res) => {
+                    if (res && res.data.status === 3) {
+                        toast.current.show({
+                            severity: 'success',
+
+                            summary: 'Successfull',
+
+                            detail: `${res.data.message}`,
+
+                            life: 4000
+                        });
+                    } else {
+                        toast.current.show({
+                            severity: 'error',
+
+                            summary: 'Unsuccessfull',
+
+                            detail: `${res.data.message}`,
+
+                            life: 4000
+                        });
+                    }
+                })
+
+                .catch((err) => {
+                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+                })
+
+                .finally(() => {
+                    setWithdrawDialog(false);
+                });
+        }
+    };
     const inputChange = (e, name) => {
+        debugger;
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
         _result[`${name}`] = val;
@@ -92,7 +134,7 @@ const index = (props) => {
     const withdrawDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hidewithdrawTrsDialog} />
-            <Button label="Withdraw" icon="pi pi-check" className="login-btn" raised onClick={''} />
+            <Button label="Withdraw" icon="pi pi-check" className="login-btn" raised onClick={saveResult} />
         </>
     );
     const textCopied = () => {
@@ -215,16 +257,16 @@ const index = (props) => {
                         <Dialog visible={withdraw} style={{ width: '450px' }} header={'Withdraw '} modal className="p-fluid" footer={withdrawDialogFooter} onHide={hidewithdrawTrsDialog}>
                             <div className="p-fluid card mt-2 ">
                                 <div className="field">
-                                    <label htmlFor="userId">Account Number *</label>
+                                    <label htmlFor="userId">User Id *</label>
                                     <InputText id="userId" value={result.userId} onChange={(e) => inputChange(e, 'userId')} required />
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="userName">Account Holder Name *</label>
+                                    <label htmlFor="userName">User Name *</label>
                                     <InputText id="userName" value={result.userName} onChange={(e) => inputChange(e, 'userName')} required />
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="Amount">Amount *</label>
-                                    <InputText id="Amount" type="number" value={result.amount} onChange={(e) => inputChange(e, 'Amount')} required />
+                                    <label htmlFor="amount">Amount *</label>
+                                    <InputText id="amount" type="number" value={result.amount} onChange={(e) => inputChange(e, 'amount')} required />
                                 </div>
                                 <div className="field">
                                     <br />
@@ -233,7 +275,7 @@ const index = (props) => {
                                 </div>
                                 <div className="field">
                                     <label htmlFor="accountNumber">account Number *</label>
-                                    <InputText id="accountNumber" type="number" value={result.amount} onChange={(e) => inputChange(e, 'accountNumber')} required />
+                                    <InputText id="accountNumber" type="number" value={result.accountNumber} onChange={(e) => inputChange(e, 'accountNumber')} required />
                                 </div>
                             </div>
                         </Dialog>
