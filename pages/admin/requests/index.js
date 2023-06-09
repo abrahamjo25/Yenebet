@@ -14,7 +14,8 @@ export default function index() {
         userId: null,
         amount: null,
         bank: null,
-        accountNumber: null
+        accountNumber: null,
+        transactionId: '0'
     };
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
@@ -60,9 +61,11 @@ export default function index() {
     };
     const saveResult = () => {
         debugger;
+        let _result = { ...result };
+        _result['transactionId'] = '0';
         setLoading(true);
         service_2
-            .createWithdraw(result)
+            .createWithdraw(_result)
             .then((res) => {
                 if (res && res.data.status === 3) {
                     toast.current.show({
@@ -166,8 +169,8 @@ export default function index() {
                 loading={loading}
                 responsiveLayout="scroll"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                emptyMessage="No Packages found ."
-                currentPageReportTemplate="Showing {first} - {last} of {totalRecords} Packages"
+                emptyMessage="No Requests found ."
+                currentPageReportTemplate="Showing {first} - {last} of {totalRecords} Requests"
             >
                 <Column field="userId" header="User Id" />
                 <Column field="userName" header="Name" />

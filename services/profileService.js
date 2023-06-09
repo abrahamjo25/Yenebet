@@ -4,4 +4,8 @@ export default class ProfileService {
         let userId = '33125';
         return HttpService.getService('/Invitation/Index?userId=' + userId, '');
     };
+    getBalance = () => {
+        let userId = '33125';
+        return HttpService.getService('/Request/GetById/' + userId, '');
+    };
 }

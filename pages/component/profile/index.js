@@ -27,6 +27,7 @@ const index = (props) => {
     const [buttonText, setButtonText] = useState('Copy');
     const [result, setResult] = useState(empityResult);
     const [results, setResults] = useState(null);
+    const [balance, setBalance] = useState(null);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
 
@@ -46,6 +47,15 @@ const index = (props) => {
                 if (res) {
                     setResults(res.data);
                 }
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
+            });
+        service
+            .getBalance()
+            .then((res) => {
+                setBalance(res.data);
+                console.log(res.data);
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
@@ -123,7 +133,7 @@ const index = (props) => {
                                 </svg>
                                 <div className="z-2 relative text-white">
                                     <div className="text-xl font-semibold mb-3">💰 Availlable Balance</div>
-                                    <div className="text-2xl mb-5 font-bold">20,000 ETB</div>
+                                    <div className="text-2xl mb-5 font-bold"> ETB</div>
                                     <div className="flex align-items-center justify-content-between">
                                         <span className="text-lg">**** **** **** 1412</span>
                                         <span className="font-medium text-lg">Basic</span>
@@ -136,7 +146,7 @@ const index = (props) => {
                                 <div className="flex align-items-center justify-content-between mb-3">
                                     <div className="text-900 text-xl font-semibold">📦 Current Package</div>
                                 </div>
-                                <div className="text-900 text-2xl text-primary mb-5 font-bold">5,000</div>
+                                <div className="text-900 text-2xl text-primary mb-5 font-bold"></div>
                                 <div className="flex align-items-center justify-content-between">
                                     <span className="text-lg">**** **** **** 1412</span>
                                     <span className="font-medium text-lg">Basic</span>
