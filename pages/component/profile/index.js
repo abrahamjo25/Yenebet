@@ -134,7 +134,7 @@ const index = (props) => {
     const withdrawDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hidewithdrawTrsDialog} />
-            <Button label="Withdraw" icon="pi pi-check" className="login-btn" raised onClick={saveResult} />
+            <Button label="Send Request" icon="pi pi-check" className="login-btn" raised onClick={saveResult} />
         </>
     );
     const textCopied = () => {
