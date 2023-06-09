@@ -51,6 +51,11 @@ const AppMenu = () => {
                     label: 'Transactions',
                     icon: 'pi pi-tags text-lg',
                     to: '/admin/transactions'
+                },
+                {
+                    label: 'Daily Task',
+                    icon: 'pi pi-user-edit text-lg',
+                    to: '/admin/Task'
                 }
             ]
         }

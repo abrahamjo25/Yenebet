@@ -13,4 +13,20 @@ export default class PackageService {
         debugger;
         return HttpService.putService('/Package/Delete/' + id, data, '');
     };
+
+    /////////Task
+    getTask = (claim) => {
+        return HttpService.getService('/Task/Index', '');
+    };
+    createTask = (data, claim) => {
+        return HttpService.postService('/Task/Create', data, '');
+    };
+    updateTask = (id, data, claim) => {
+        return HttpService.putService('/Task/Update/' + id, data, '');
+    };
+    deleteTask = (id, data, claim) => {
+        debugger;
+        return HttpService.putService('/Task/Delete/' + id, data, '');
+    };
+   
 }
