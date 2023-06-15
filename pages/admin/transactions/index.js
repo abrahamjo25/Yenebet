@@ -11,10 +11,12 @@ import RequestService from '../../../services/requestService';
 import WithdrawService from '../../../services/withdrawService';
 export default function index() {
     let emptyResult = {
+        id: null,
         userId: null,
         amount: null,
         bank: null,
-        accountNumber: null
+        accountNumber: null,
+        transactionId: null
     };
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState(null);
@@ -24,6 +26,7 @@ export default function index() {
     const [waiting, setWaiting] = useState(false);
     const [result, setResult] = useState(emptyResult);
     const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState(false);
 
     const service_1 = new RequestService();
     const service_2 = new WithdrawService();
@@ -60,33 +63,42 @@ export default function index() {
     };
     const saveResult = () => {
         debugger;
-        setLoading(true);
-        service_2
-            .createWithdraw(result)
-            .then((res) => {
-                if (res && res.data.status === 3) {
-                    toast.current.show({
-                        severity: 'success',
-                        summary: 'Successfull',
-                        detail: `${res.data.message}`,
-                        life: 4000
-                    });
-                } else {
-                    toast.current.show({
-                        severity: 'error',
-                        summary: 'Unsuccessfull',
-                        detail: `${res.data.message}`,
-                        life: 4000
-                    });
+        setSubmitted(true);
+        if (result.transactionId !== '0') {
+            {
+                if (result.transactionId !== null) {
+                    setLoading(true);
+                    service_2
+                        .approveWithdraw(result.id, result)
+                        .then((res) => {
+                            if (res && res.data.status === 3) {
+                                toast.current.show({
+                                    severity: 'success',
+                                    summary: 'Successfull',
+                                    detail: `${res.data.message}`,
+                                    life: 4000
+                                });
+                            } else {
+                                toast.current.show({
+                                    severity: 'error',
+                                    summary: 'Unsuccessfull',
+                                    detail: `${res.data.message}`,
+                                    life: 5000
+                                });
+                            }
+                        })
+                        .catch((err) => {
+                            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
+                        })
+                        .finally(() => {
+                            setResultDialog(false);
+                            refreashTable();
+                        });
                 }
-            })
-            .catch((err) => {
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
-            })
-            .finally(() => {
-                setResultDialog(false);
-                refreashTable();
-            });
+            }
+        } else {
+            setError(true);
+        }
     };
     const deleteResult = () => {
         debugger;
@@ -132,12 +144,28 @@ export default function index() {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-check" label="Approve" className="p-button-rounded p-button-warning pl-1 mr-2" onClick={() => withDraw(rowData)} />
+                <Button icon="pi pi-check" label="Approve" disabled={rowData.recordStatus === 3 ? true : false} className="p-button-rounded p-button-warning pl-1 mr-2" onClick={() => withDraw(rowData)} />
             </div>
         );
     };
     const dateBodyTamplate = (rowData) => {
         return <>{new Date(rowData.registeredDate).toLocaleString().split(',')[0]}</>;
+    };
+    const statusBodyTamplate = (rowData) => {
+        let status = 'AA';
+        let css = '';
+        if (rowData.recordStatus === 3) {
+            status = 'Paid';
+            css = 'product-badge status-instock';
+        } else if (rowData.recordStatus === 2) {
+            status = 'Pending';
+            css = 'product-badge status-outofstock';
+        }
+        return (
+            <>
+                <span className={css}>{status}</span>
+            </>
+        );
     };
     const resultDialogFooter = (
         <>
@@ -174,40 +202,58 @@ export default function index() {
                 <Column field="amount" header="Ammount to Withdraw" />
                 <Column field="bank" header="Bank to Withdraw" />
                 <Column field="accountNumber" header="Account Number" />
+                <Column field="transactionId" header="Transaction Id" />
                 <Column field="registeredDate" header="Request Date(M/D/Y)" body={dateBodyTamplate} />
+                <Column field="recordStatus" header="Status" body={statusBodyTamplate} />
                 <Column header="Action" body={actionBodyTemplate} />
             </DataTable>
             <Dialog visible={resultDialog} style={{ width: '700px' }} header="" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>
                 <div className="card p-fluid">
-                    <h4 className="text-center">Withdraw Money</h4>
+                    <h4 className="text-center">Approve Withdrawal Money</h4>
+                    <span className="text-red-600 mb-3">This is the final stage. the system authomatically withdraw from the account given after you give the transaction Id.</span>
                     <div className="formgrid grid">
-                        <div className="field col">
-                            <label htmlFor="userId">User Id</label>
-                            <InputText id="userId" value={result.userId} onChange={(e) => onInputChange(e, 'userId')} required className={classNames({ 'p-invalid': submitted && !result.userId })} />
-                            {submitted && !result.packageName && <small className="p-invalid text-danger">User Id is required.</small>}
+                        <div className="field col-6">
+                            <label htmlFor="transactionId">Transaction Id</label>
+                            <InputText
+                                id="transactionId"
+                                // value={result.transactionId}
+                                onChange={(e) => onInputChange(e, 'transactionId')}
+                                placeholder="Transaction Id"
+                                required
+                                className={classNames({ 'p-invalid': submitted && !result.transactionId })}
+                            />
+                            {submitted && error && <small className="p-invalid text-red-600">Transaction Id is required.</small>}
                         </div>
                         <div className="field col">
-                            <label htmlFor="userName">Full Name</label>
-                            <InputText id="userName" value={result.userName} onChange={(e) => onInputChange(e, 'userName')} required className={classNames({ 'p-invalid': submitted && !result.userName })} />
-                            {submitted && !result.userName && <small className="p-invalid text-danger">Name is required.</small>}
+                            <label htmlFor="userId">User Id</label>
+                            <InputText id="userId" value={result.userId} disabled={true} onChange={(e) => onInputChange(e, 'userId')} required className={classNames({ 'p-invalid': submitted && !result.userId })} />
+                            {submitted && !result.userId && <small className="p-invalid text-danger">User Id is required.</small>}
                         </div>
                     </div>
                     <div className="formgrid grid">
                         <div className="field col">
                             <label htmlFor="bank">Bank</label>
-                            <InputText id="bank" value={result.bank} onChange={(e) => onInputChange(e, 'bank')} required className={classNames({ 'p-invalid': submitted && !result.bank })} />
+                            <InputText id="bank" value={result.bank} disabled={true} onChange={(e) => onInputChange(e, 'bank')} required className={classNames({ 'p-invalid': submitted && !result.bank })} />
                             {submitted && !result.bank && <small className="p-invalid text-danger">Bank is required.</small>}
                         </div>
                         <div className="field col">
                             <label htmlFor="accountNumber">Account Number</label>
-                            <InputText id="accountNumber" type="number" value={result.accountNumber} onChange={(e) => onInputChange(e, 'accountNumber')} required className={classNames({ 'p-invalid': submitted && !result.accountNumber })} />
+                            <InputText
+                                id="accountNumber"
+                                type="number"
+                                value={result.accountNumber}
+                                disabled={true}
+                                onChange={(e) => onInputChange(e, 'accountNumber')}
+                                required
+                                className={classNames({ 'p-invalid': submitted && !result.accountNumber })}
+                            />
                             {submitted && !result.accountNumber && <small className="p-invalid text-danger">Account is required.</small>}
                         </div>
                     </div>
                     <div className="formgrid grid">
                         <div className="field col">
                             <label htmlFor="amount">Ammount</label>
-                            <InputText id="amount" value={result.amount} onChange={(e) => onInputChange(e, 'amount')} required className={classNames({ 'p-invalid': submitted && !result.amount })} />
+                            <InputText id="amount" value={result.amount} onChange={(e) => onInputChange(e, 'amount')} disabled={true} required className={classNames({ 'p-invalid': submitted && !result.amount })} />
                             {submitted && !result.amount && <small className="p-invalid text-danger">Ammount is required.</small>}
                         </div>
                     </div>
