@@ -36,13 +36,6 @@ const index = (props) => {
     const [filteredBankType, setFilteredBankType] = useState(null);
 
     const toast = useRef(null);
-    let bankTypes = [
-        { name: 'Commertial Bank', value: '1' },
-        { name: 'Bank of Abyssinia', value: '2' },
-        { name: 'Awash Bank ', value: '3' },
-        { name: 'Dashen Bank', value: '4' }
-    ];
-
     const service = new ProfileService();
     const bankService = new PackageService();
     useEffect(() => {
@@ -65,26 +58,6 @@ const index = (props) => {
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
-            });
-        service
-            .getBalance()
-            .then((res) => {
-                setBalance(res.data);
-                console.log(res.data);
-            })
-            .catch((err) => {
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-        bankService
-            .getBank()
-            .then((res) => {
-                setBanks(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
             })
             .finally(() => {
                 setLoading(false);
