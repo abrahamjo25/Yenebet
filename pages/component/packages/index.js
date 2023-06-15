@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../header';
 import Footer from '../footer';
 import { Button } from 'primereact/button';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
+import PackageService from '../../../services/PackageService';
 const index = () => {
     let emptyResult = {
         packageName: '',
@@ -17,15 +20,34 @@ const index = () => {
     };
     const [waiting, setWaiting] = useState(false);
     const [result, setResult] = useState(emptyResult);
+    const [results, setResults] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
     const [packageDialog, setPackageDilog] = useState(false);
+    const service = new PackageService();
     let bankTypes = [
         { name: 'Commertial Bank', value: '1' },
         { name: 'Bank of Abyssinia', value: '2' },
         { name: 'Awash Bank ', value: '3' },
         { name: 'Dashen Bank', value: '4' }
     ];
+    useEffect(() => {
+        debugger;
+        setLoading(true);
+        service
+            .getPackage()
+            .then((res) => {
+                console.log('Packages', res.data);
+                setResults(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
     const packageDetail = (e) => {
         setPackageDilog(true);
     };
@@ -34,219 +56,52 @@ const index = () => {
         setPackageDilog(false);
     };
     const saveResult = () => {};
-
     return (
         <>
             <div className="col-12">
                 <div className="card">
                     <Header />
+
                     <div className="surface-0">
                         <div className="text-900 font-bold text-4xl mb-4 text-center">Package Plans</div>
                         <div className="text-700 text-xl mb-6 text-center line-height-3">
                             <span style={{ color: '#6366F1' }}> Yene</span>Bet is the most powerfull and convenient digital software which gives you usefull packages{' '}
                         </div>
                         <div className="grid">
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Basic</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">1000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
+                            {results?.map((index) => {
+                                return (
+                                    <div className="col-12 lg:col-3 card">
+                                        <div className="p-3 h-full">
+                                            <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
+                                                <div className="text-900 font-medium text-xl mb-2">{index.packageName}</div>
+                                                <div className="text-600">{index.description}</div>
+                                                <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
+                                                <div className="flex align-items-center">
+                                                    <span className="font-bold text-2xl text-900">{index.packageAmount}</span>
+                                                    <span className="ml-2 font-medium text-600">ETB</span>
+                                                </div>
+                                                <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
+                                                <ul className="list-none p-0 m-0 flex-grow-1">
+                                                    <li className="flex align-items-center mb-3">
+                                                        <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                                        <span>Arcu vitae elementum</span>
+                                                    </li>
+                                                    <li className="flex align-items-center mb-3">
+                                                        <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                                        <span>Dui faucibus in ornare</span>
+                                                    </li>
+                                                    <li className="flex align-items-center mb-3">
+                                                        <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                                        <span>Morbi tincidunt augue</span>
+                                                    </li>
+                                                    <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
+                                                    <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={(e) => packageDetail(e)} />
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
-                                        <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={(e) => packageDetail(e)} />
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Premium</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">5000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
-                                        </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Duis ultricies lacus sed</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <Button label="Buy Now" className="p-3 w-full" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Enterprise</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">12,000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
-                                        </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Duis ultricies lacus sed</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <Button label="Buy Now" className="p-3 w-full p-button-outlined" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Enterprise</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">18,000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
-                                        </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Duis ultricies lacus sed</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <Button label="Buy Now" className="p-3 w-full p-button-outlined" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Enterprise</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">25,000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
-                                        </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Duis ultricies lacus sed</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <Button label="Buy Now" className="p-3 w-full p-button-outlined" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12 lg:col-2 card">
-                                <div className="p-3 h-full">
-                                    <div className="shadow-2 p-3 h-full flex flex-column" style={{ borderRadius: '6px' }}>
-                                        <div className="text-900 font-medium text-xl mb-2">Enterprise</div>
-                                        <div className="text-600">Plan description</div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <div className="flex align-items-center">
-                                            <span className="font-bold text-2xl text-900">35,000</span>
-                                            <span className="ml-2 font-medium text-600">ETB</span>
-                                        </div>
-                                        <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <ul className="list-none p-0 m-0 flex-grow-1">
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Arcu vitae elementum</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Dui faucibus in ornare</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Morbi tincidunt augue</span>
-                                            </li>
-                                            <li className="flex align-items-center mb-3">
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                <span>Duis ultricies lacus sed</span>
-                                            </li>
-                                        </ul>
-                                        <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                        <Button label="Buy Now" className="p-3 w-full p-button-outlined" />
-                                    </div>
-                                </div>
-                            </div>
+                                );
+                            })}
                         </div>
                     </div>
                     <hr />

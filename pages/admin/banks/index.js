@@ -62,6 +62,7 @@ export default function index() {
     };
     const editResult = (rowData) => {
         setEditableData(rowData);
+        setResult(rowData);
         setResultDialog(true);
     };
     const confirmDeleteResult = (rowData) => {

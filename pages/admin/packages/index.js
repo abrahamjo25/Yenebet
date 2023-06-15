@@ -64,6 +64,7 @@ export default function index() {
         setResultNewDialog(true);
     };
     const editResult = (rowData) => {
+        setResult(rowData);
         setEditableData(rowData);
         setResultDialog(true);
     };
@@ -114,22 +115,29 @@ export default function index() {
         service
             .updatePackage(Id, result)
             .then((res) => {
-                setLoading(true);
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Success Message',
-                    detail: 'Successfully Updated',
-                    life: 4000
-                });
-                refreashTable();
+                if (res && res.data.status === 3) {
+                    toast.current.show({
+                        severity: 'success',
+                        summary: 'Successfull',
+                        detail: `${res.data.message}`,
+                        life: 4000
+                    });
+                } else {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Unsuccessfull',
+                        detail: `${res.data.message}`,
+                        life: 4000
+                    });
+                }
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Error occured', life: 4000 });
             })
             .finally(() => {
                 setResultDialog(false);
-
-                // setResult(emptyResult);
+                refreashTable();
+                setResult(emptyResult);
             });
     };
     const deleteResult = () => {

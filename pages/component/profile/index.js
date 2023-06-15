@@ -30,6 +30,7 @@ const index = (props) => {
     const [buttonText, setButtonText] = useState('Copy');
     const [result, setResult] = useState(empityResult);
     const [results, setResults] = useState(null);
+    const [banks, setBanks] = useState(null);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
 
@@ -42,6 +43,7 @@ const index = (props) => {
     ];
 
     const service = new ProfileService();
+    const bankService = new PackageService();
     useEffect(() => {
         setLoading(true);
         service
@@ -53,6 +55,17 @@ const index = (props) => {
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+        bankService
+            .getBank()
+            .then((res) => {
+                setBanks(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
             })
             .finally(() => {
                 setLoading(false);
@@ -271,7 +284,7 @@ const index = (props) => {
                                 <div className="field">
                                     <br />
                                     <label htmlFor="bank">Account Type*</label>
-                                    <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={bankTypes} optionLabel="name" required placeholder="Select Bank Type" />
+                                    <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={banks} optionLabel="bankName" required placeholder="Select Bank Type" />
                                 </div>
                                 <div className="field">
                                     <label htmlFor="accountNumber">account Number *</label>
