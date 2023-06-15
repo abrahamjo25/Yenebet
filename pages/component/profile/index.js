@@ -143,7 +143,7 @@ const index = (props) => {
         debugger;
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
-        _result[`${name}`] = val;
+        _result[`${name}`] = val.bankName;
         setFilteredBankType(val);
         setResult(_result);
     };
