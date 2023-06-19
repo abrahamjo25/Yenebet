@@ -6,27 +6,36 @@ import { LayoutProvider } from '../layout/context/layoutcontext';
 import Layout from '../layout/layout';
 import '../styles/demo/Demos.scss';
 import '../styles/layout/layout.scss';
+import '../styles/Modal.css';
 import dynamic from 'next/dynamic';
 import PrimeReact from 'primereact/api';
 import { useRouter } from 'next/router';
+import secureLocalStorage from 'react-secure-storage';
+import { YenebetContextProvider } from './context/yenebetContext';
 const MyApp = ({ Component, pageProps }) => {
     PrimeReact.ripple = true;
     const router = useRouter();
     useEffect(() => {
-        // const userInfo = secureLocalStorage.getItem("username");
-        // if (router.pathname !== "/auth/login" && !userInfo) {
-        //     router.push("/auth/login");
-        // }
+        let token = JSON.parse(secureLocalStorage.getItem('user'));
+        if (token === null || token === '') {
+            router.push('/');
+        }
     }, []);
     if (Component.getLayout) {
-        return <LayoutProvider>{Component.getLayout(<Component {...pageProps} />)}</LayoutProvider>;
+        return (
+            <YenebetContextProvider>
+                <LayoutProvider>{Component.getLayout(<Component {...pageProps} />)}</LayoutProvider>
+            </YenebetContextProvider>
+        );
     } else {
         return (
-            <LayoutProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </LayoutProvider>
+            <YenebetContextProvider>
+                <LayoutProvider>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </LayoutProvider>
+            </YenebetContextProvider>
         );
     }
 };

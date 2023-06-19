@@ -8,8 +8,6 @@ import { Column } from 'primereact/column';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import { Ripple } from 'primereact/ripple';
-import { update } from 'lodash';
 export default function index() {
     let emptyResult = {
         packageName: '',
@@ -31,20 +29,10 @@ export default function index() {
     const service = new PackageService();
     const toast = useRef(null);
     useEffect(() => {
-        setLoading(true);
-        service
-            .getPackage()
-            .then((res) => {
-                setResults(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        refreashTable();
     }, []);
     const refreashTable = () => {
+        setLoading(true);
         service
             .getPackage()
             .then((res) => {

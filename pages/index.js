@@ -1,25 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
 import Header from './component/header';
 import Footer from './component/footer';
-import secureLocalStorage from 'react-secure-storage';
-import { useRouter } from 'next/router';
-
+import SnipperModal from '../styles/SnipperModal';
 function Index({}) {
+    const [rotating, setRotating] = useState(false);
     useEffect(() => {
-        secureLocalStorage.setItem('idToken', 'token');
+        const timer = setTimeout(() => {
+            setRotating(true);
+        }, 1000);
+        setRotating(false);
+        return () => clearTimeout(timer);
     }, []);
-    const router = useRouter();
-    const getStarted = () => {
-        let token = secureLocalStorage.getItem('idToken');
-        if (token === null || token === '') {
-            router.push('/component/register');
-        } else {
-            router.push('/component/packages');
-        }
-    };
     return (
         <>
+            {!rotating ? <SnipperModal /> : ''}
             <div className="col-12">
                 <div className="card">
                     <Header />
@@ -29,7 +24,7 @@ function Index({}) {
                                 <span className="block text-6xl font-bold mb-1">Create the screens</span>
                                 <div className="text-6xl text-primary font-bold mb-3">You Shall Deserve to see your Dreams </div>
                                 <p className="mt-0 mb-4 text-700 line-height-3">Create your profile and benefit more!</p>
-                                <Button label="Get Started" type="button" className="p-button-outlined" onClick={getStarted} />
+                                <Button label="Get Started" type="button" className="p-button-outlined" />
                             </section>
                         </div>
                         <div className="col-12 md:col-6 overflow-hidden">

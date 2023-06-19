@@ -94,7 +94,9 @@ const axiosInstance = axios.create({
     headers: {
         'Access-Control-Allow-Credentials': true,
         'access-control-allow-origin': '*',
-        'Access-Control-Allow-Headers': 'accesstoken, clientclaim'
+        'Access-Control-Allow-Headers': 'accesstoken, clientclaim',
+        Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWJyYWhhbWpvIiwianRpIjoiMTIxNmU1OGMtYjdjMC00YTIyLThlYTctYmZkYjg4MzUxMjEyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIkFkbWluIiwiVXNlciJdLCJleHAiOjE2ODY5MDI3ODMsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCJ9.r3742Acj2YdIwFJQYlWxdII3DXvyLeXeP1Zek4uHS4c'
     }
 });
 

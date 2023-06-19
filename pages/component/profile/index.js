@@ -1,5 +1,4 @@
-import getConfig from 'next/config';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Footer from '../footer';
 import Header from '../header';
 import { Button } from 'primereact/button';
@@ -12,25 +11,28 @@ import { InputText } from 'primereact/inputtext';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ProfileService from '../../../services/profileService';
 import { useRef } from 'react';
-import PackageService from '../../../services/PackageService';
-import { InputNumber } from 'primereact/inputnumber';
+import { MyContext } from '../../context/yenebetContext';
+import SnipperModal from '../../../styles/SnipperModal';
 const index = (props) => {
+    const { username, token, exp } = useContext(MyContext);
     let empityResult = {
-        userId: '33126',
-        userName: '',
-        amount: 0,
-        bank: '',
-        accountNumber: 0
+        userId: { username },
+        userName: null,
+        amount: null,
+        bank: null,
+        accountNumber: null
     };
     const [state, setState] = useState({
         value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
         copied: false
     });
     const [loading, setLoading] = useState(false);
+    const [rotating, setRoating] = useState(false);
     const [buttonText, setButtonText] = useState('Copy');
     const [result, setResult] = useState(empityResult);
     const [results, setResults] = useState(null);
-    const [balance, setBalance] = useState(null);
+    const [balance, setBalance] = useState(0);
+    const [myPackage, setMyPackage] = useState(0);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
 
@@ -49,7 +51,7 @@ const index = (props) => {
             .getProfile()
             .then((res) => {
                 if (res) {
-                    setResults(res.data);
+                    setResults(res.data);pi-sign-out
                 }
             })
             .catch((err) => {
@@ -58,8 +60,8 @@ const index = (props) => {
         service
             .getBalance()
             .then((res) => {
-                setBalance(res.data);
-                console.log(res.data);
+                setBalance(res.data.balance);
+                setMyPackage(res.data.packages.packageName);
             })
             .catch((err) => {
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
@@ -67,6 +69,13 @@ const index = (props) => {
             .finally(() => {
                 setLoading(false);
             });
+    }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setRoating(true);
+        }, 1000);
+        setRoating(false);
+        return () => clearTimeout(timer);
     }, []);
     const rowCount = (rowData, props) => {
         let index = parseInt(props.rowIndex + 1, 10);
@@ -76,11 +85,6 @@ const index = (props) => {
             </React.Fragment>
         );
     };
-    const user = [
-        { name: 'Beti', package: '5000', bonus: '1750' },
-        { name: 'Dani', package: '10000', bonus: '3500' },
-        { name: 'Birhan', package: '8000', bonus: '2800' }
-    ];
     const withdrawTrsDialog = () => {
         setWithdrawDialog(true);
     };
@@ -89,7 +93,6 @@ const index = (props) => {
         setResult(empityResult);
     };
     const saveResult = () => {
-        debugger;
         if (result.userName && result.amount) {
             service
                 .createRequest(result)
@@ -127,14 +130,12 @@ const index = (props) => {
         }
     };
     const inputChange = (e, name) => {
-        debugger;
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
         _result[`${name}`] = val;
         setResult(_result);
     };
     const OndropdawnChange = (e, name) => {
-        debugger;
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
         _result[`${name}`] = val;
@@ -161,35 +162,38 @@ const index = (props) => {
                 <div className="card">
                     <Header />
                     <Toast ref={toast} />
-                    {loading ? '' : ''}
                     <div className="grid">
                         <div className="col-12 md:col-6 xl:col-4">
-                            <div className="card h-full relative overflow-hidden">
-                                <svg id="visual" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" className="absolute left-0 top-0 h-full w-full z-1" preserveAspectRatio="none">
-                                    <rect x="0" y="0" width="900" height="600" fill="var(--primary-600)"></rect>
-                                    <path
-                                        d="M0 400L30 386.5C60 373 120 346 180 334.8C240 323.7 300 328.3 360 345.2C420 362 480 391 540 392C600 393 660 366 720 355.2C780 344.3 840 349.7 870 352.3L900 355L900 601L870 601C840 601 780 601 720 601C660 601 600 601 540 601C480 601 420 601 360 601C300 601 240 601 180 601C120 601 60 601 30 601L0 601Z"
-                                        fill="var(--primary-500)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="miter"
-                                    ></path>
-                                </svg>
-                                <div className="z-2 relative text-white">
-                                    <div className="text-xl font-semibold mb-3">💰 Availlable Balance</div>
-                                    <div className="text-2xl mb-5 font-bold"> ETB</div>
-                                    <div className="flex align-items-center justify-content-between">
-                                        <span className="text-lg">**** **** **** 1412</span>
-                                        <span className="font-medium text-lg">Basic</span>
+                            {!rotating ? (
+                                <SnipperModal />
+                            ) : (
+                                <div className="card h-full relative overflow-hidden">
+                                    <svg id="visual" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" className="absolute left-0 top-0 h-full w-full z-1" preserveAspectRatio="none">
+                                        <rect x="0" y="0" width="900" height="600" fill="var(--primary-600)"></rect>
+                                        <path
+                                            d="M0 400L30 386.5C60 373 120 346 180 334.8C240 323.7 300 328.3 360 345.2C420 362 480 391 540 392C600 393 660 366 720 355.2C780 344.3 840 349.7 870 352.3L900 355L900 601L870 601C840 601 780 601 720 601C660 601 600 601 540 601C480 601 420 601 360 601C300 601 240 601 180 601C120 601 60 601 30 601L0 601Z"
+                                            fill="var(--primary-500)"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="miter"
+                                        ></path>
+                                    </svg>
+                                    <div className="z-2 relative text-white">
+                                        <div className="text-xl font-semibold mb-3">💰 Availlable Balance</div>
+                                        <div className="text-2xl mb-5 font-bold">{balance} ETB</div>
+                                        <div className="flex align-items-center justify-content-between">
+                                            <span className="text-lg">**** **** **** 1412</span>
+                                            <span className="font-medium text-lg">Basic</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <div className="col-12 md:col-6 xl:col-4">
                             <div className="card h-full">
                                 <div className="flex align-items-center justify-content-between mb-3">
                                     <div className="text-900 text-xl font-semibold">📦 Current Package</div>
                                 </div>
-                                <div className="text-900 text-2xl text-primary mb-5 font-bold"></div>
+                                <div className="text-900 text-2xl text-primary mb-5 font-bold">{myPackage}</div>
                                 <div className="flex align-items-center justify-content-between">
                                     <span className="text-lg">**** **** **** 1412</span>
                                     <span className="font-medium text-lg">Basic</span>
@@ -268,10 +272,10 @@ const index = (props) => {
                             <div className="p-fluid card mt-2 ">
                                 <div className="field">
                                     <label htmlFor="userId">User Id *</label>
-                                    <InputText id="userId" value={result.userId} onChange={(e) => inputChange(e, 'userId')} required />
+                                    <InputText id="userId" value={username} disabled={true} onChange={(e) => inputChange(e, 'userId')} required />
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="userName">User Name *</label>
+                                    <label htmlFor="userName">Full Name *</label>
                                     <InputText id="userName" value={result.userName} onChange={(e) => inputChange(e, 'userName')} required />
                                 </div>
                                 <div className="field">

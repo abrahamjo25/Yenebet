@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../header';
 import Footer from '../footer';
 import { Button } from 'primereact/button';
@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
+import SnipperModal from '../../../styles/SnipperModal';
 const index = () => {
     let emptyResult = {
         packageName: '',
@@ -16,6 +17,7 @@ const index = () => {
         taskValue: 0
     };
     const [waiting, setWaiting] = useState(false);
+    const [rotating, setRotating] = useState(false);
     const [result, setResult] = useState(emptyResult);
     const [submitted, setSubmitted] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
@@ -26,6 +28,13 @@ const index = () => {
         { name: 'Awash Bank ', value: '3' },
         { name: 'Dashen Bank', value: '4' }
     ];
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setRotating(true);
+        }, 1000);
+        setRotating(false);
+        return () => clearTimeout(timer);
+    }, []);
     const packageDetail = (e) => {
         setPackageDilog(true);
     };
@@ -37,6 +46,7 @@ const index = () => {
 
     return (
         <>
+            {!rotating ? <SnipperModal /> : ''}
             <div className="col-12">
                 <div className="card">
                     <Header />
