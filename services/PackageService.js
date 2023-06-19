@@ -13,6 +13,19 @@ export default class PackageService {
         debugger;
         return HttpService.putService('/Package/Delete/' + id, data, '');
     };
+    //// Bank
+    getBank = (claim) => {
+        return HttpService.getService('/Bank/Index', '');
+    };
+    createBank = (data, claim) => {
+        return HttpService.postService('/Bank/Create', data, '');
+    };
+    updateBank = (id, data, claim) => {
+        return HttpService.putService('/Bank/Update/' + id, data, '');
+    };
+    deleteBank = (id, data, claim) => {
+        return HttpService.putService('/Bank/Delete/' + id, data, '');
+    };
 
     /////////Task
     getTask = (claim) => {
@@ -28,5 +41,4 @@ export default class PackageService {
         debugger;
         return HttpService.putService('/Task/Delete/' + id, data, '');
     };
-   
 }
