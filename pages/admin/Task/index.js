@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { Column } from 'primereact/column';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
@@ -62,6 +63,7 @@ export default function index() {
         setResultNewDialog(true);
     };
     const editResult = (rowData) => {
+        setResult(rowData);
         setEditableData(rowData);
         setResultDialog(true);
     };
@@ -227,7 +229,7 @@ export default function index() {
                     </div>
                     <div className="field col">
                         <label htmlFor="description">description</label>
-                        <InputText id="description" value={result.description} onChange={(e) => onInputChange(e, 'description')} required className={classNames({ 'p-invalid': submitted && !result.description })} />
+                        <InputTextarea id="description" value={result.description} onChange={(e) => onInputChange(e, 'description')} required className={classNames({ 'p-invalid': submitted && !result.description })} />
                         {submitted && !result.description && <small className="p-invalid text-danger">description is required.</small>}
                     </div>
 
