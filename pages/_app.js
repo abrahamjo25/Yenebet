@@ -15,12 +15,12 @@ import { YenebetContextProvider } from './context/yenebetContext';
 const MyApp = ({ Component, pageProps }) => {
     PrimeReact.ripple = true;
     const router = useRouter();
-    useEffect(() => {
-        let token = JSON.parse(secureLocalStorage.getItem('user'));
-        if (token === null || token === '') {
-            router.push('/');
-        }
-    }, []);
+    // useEffect(() => {
+    //     let token = JSON.parse(secureLocalStorage.getItem('user'));
+    //     if (token === null || token === '') {
+    //         router.push('/');
+    //     }
+    // }, []);
     if (Component.getLayout) {
         return (
             <YenebetContextProvider>

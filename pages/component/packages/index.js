@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import React, { useState, useEffect } from 'react';
 import Header from '../header';
 import Footer from '../footer';
 import { Button } from 'primereact/button';

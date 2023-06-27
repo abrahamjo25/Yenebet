@@ -13,8 +13,13 @@ import ProfileService from '../../../services/profileService';
 import { useRef } from 'react';
 import { MyContext } from '../../context/yenebetContext';
 import SnipperModal from '../../../styles/SnipperModal';
+import PackageService from '../../../services/PackageService';
+import secureLocalStorage from 'react-secure-storage';
+import getConfig from 'next/config';
 const index = (props) => {
-    const { username, token, exp } = useContext(MyContext);
+    const { username } = useContext(MyContext);
+    console.log(username);
+    let ref = username;
     let empityResult = {
         userId: { username },
         userName: null,
@@ -22,10 +27,16 @@ const index = (props) => {
         bank: null,
         accountNumber: null
     };
+    const contextPath = getConfig().publicRuntimeConfig.contextPath;
     const [state, setState] = useState({
-        value: 'https://www.yenebet.com/search?q=primereact?id=BHGREW',
+        value: '',
         copied: false
     });
+    useEffect(() => {
+        let _result = { ...state };
+        _result['value'] = contextPath + '/component/register?ref=' + username;
+        setState(_result);
+    }, []);
     const [loading, setLoading] = useState(false);
     const [rotating, setRoating] = useState(false);
     const [buttonText, setButtonText] = useState('Copy');
@@ -46,11 +57,12 @@ const index = (props) => {
             .getProfile()
             .then((res) => {
                 if (res) {
-                    setResults(res.data);pi-sign-out
+                    setResults(res.data);
+                    pi - sign - out;
                 }
             })
             .catch((err) => {
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
+                console.log(err);
             });
         service
             .getBalance()
@@ -59,7 +71,7 @@ const index = (props) => {
                 setMyPackage(res.data.packages.packageName);
             })
             .catch((err) => {
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: `Some error occured`, life: 4000 });
+                console.log(err);
             })
             .finally(() => {
                 setLoading(false);
