@@ -337,7 +337,7 @@ const index = (props) => {
                                     <b>⚠️ Cuation! </b>
                                 </div>
 
-                                <p>Use your link only to invite a friend to register on your behalf</p>
+                                <p>Use your link only to invite a friend to register on your behalf.</p>
                             </div>
                         </div>
                     </div>
