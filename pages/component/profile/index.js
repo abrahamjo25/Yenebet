@@ -16,8 +16,9 @@ import SnipperModal from '../../../styles/SnipperModal';
 import PackageService from '../../../services/PackageService';
 import secureLocalStorage from 'react-secure-storage';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 const index = (props) => {
-    const { username } = useContext(MyContext);
+    const { username, invite } = useContext(MyContext);
     console.log(username);
     let ref = username;
     let empityResult = {
@@ -27,16 +28,12 @@ const index = (props) => {
         bank: null,
         accountNumber: null
     };
+    const router = useRouter();
     const contextPath = getConfig().publicRuntimeConfig.contextPath;
     const [state, setState] = useState({
-        value: '',
+        value: `/component/register?ref=`,
         copied: false
     });
-    useEffect(() => {
-        let _result = { ...state };
-        _result['value'] = contextPath + '/component/register?ref=' + username;
-        setState(_result);
-    }, []);
     const [loading, setLoading] = useState(false);
     const [rotating, setRoating] = useState(false);
     const [buttonText, setButtonText] = useState('Copy');
@@ -51,6 +48,7 @@ const index = (props) => {
     const toast = useRef(null);
     const service = new ProfileService();
     const bankService = new PackageService();
+    const baseUrl = `${window.location.protocol}//${window.location.host}${router.basePath}`;
     useEffect(() => {
         setLoading(true);
         service
@@ -322,9 +320,9 @@ const index = (props) => {
                                             <p>
                                                 🙏 Copy and invite the below link to your best friends, family or any user.
                                                 <br />
-                                                <a href="">{state.value}</a>
+                                                <a href="">{baseUrl + state.value + invite}</a>
                                                 <br />
-                                                <CopyToClipboard text={state.value} onCopy={() => textCopied()}>
+                                                <CopyToClipboard text={baseUrl + state.value + invite} onCopy={() => textCopied()}>
                                                     <button>{buttonText}</button>
                                                 </CopyToClipboard>
                                             </p>

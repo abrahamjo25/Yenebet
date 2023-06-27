@@ -169,7 +169,7 @@ function Header() {
                 <div className="flex flex-column sm:flex-row align-items-center gap-4">
                     <div className="flex flex-column sm:flex-row align-items-center gap-3">
                         <div className="flex flex-column align-items-center sm:align-items-start">
-                            <span className="text-600 font-bold text-xl">{username ? `Loged In with  /component/register?ref=${username}` : ''}</span>
+                            <span className="text-600 font-bold text-xl">{username ? `Loged In with ${username}` : ''}</span>
                         </div>
                     </div>
                     <div className="flex gap-2 sm:ml-auto">

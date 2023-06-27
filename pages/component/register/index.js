@@ -4,6 +4,8 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import RegisterService from '../../../services/registerService';
 import { useRouter } from 'next/router';
+import Header from '../header';
+import Footer from '../footer';
 function index() {
     let emptyResult = {
         username: null,
@@ -104,6 +106,7 @@ function index() {
     );
     return (
         <>
+            <Header />
             <Dialog visible={true} style={{ width: '450px' }} header="Register For YeneBet" footer={signupFooter} onHide={signupHide}>
                 <div className="p-fluid  grid card mt-2 ">
                     <span className=" flex flex-column  gap-2  col-10 ml-5">
@@ -123,6 +126,7 @@ function index() {
                     </span>
                 </div>
             </Dialog>
+            <Footer />
         </>
     );
 }
