@@ -117,12 +117,14 @@ function Header() {
                 .then((res) => {
                     if (res) {
                         if (res.status === 200) {
+                            console.log(res);
                             toast.current.show({ severity: 'success', summary: '', detail: 'Sign in Successful!', life: 4000 });
                             secureLocalStorage.setItem('user', JSON.stringify(res.data));
                             secureLocalStorage.setItem('token', res.data.token);
                             secureLocalStorage.setItem('exp', res.data.expiration);
                             secureLocalStorage.setItem('inviteCode', res.data.invoteCode);
                             secureLocalStorage.setItem('isAuthenticated', true);
+                            localStorage.setItem("token",res.data.token)
                             router.push('/component/profile');
                         } else {
                             toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.message || res.data.Message}`, life: 4000 });
