@@ -171,6 +171,7 @@ export default function index() {
     const rightToolbarTemplate = () => {
         return <></>;
     };
+
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">

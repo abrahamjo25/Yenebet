@@ -1,4 +1,4 @@
-import axiosInstance from '../utilities/axios';
+import { axiosInstance } from '../utilities/axiosAPI';
 
 class HttpService {
     static postService = (path, data) => {
@@ -39,6 +39,7 @@ class HttpService {
     };
 
     static getService = (relativePath, queryString = '') => {
+        debugger;
         return axiosInstance.get(relativePath, {
             params: queryString
         });

@@ -18,17 +18,7 @@ const AppMenu = () => {
                         {
                             label: 'Users',
                             icon: 'pi pi-fw pi-user',
-                            to: '/management/users'
-                        },
-                        {
-                            label: 'Clients',
-                            icon: 'pi pi-fw pi-comments',
-                            to: '/management/clients'
-                        },
-                        {
-                            label: 'Services',
-                            icon: 'pi pi-fw pi-check-square',
-                            to: '/management/services'
+                            to: '/auth/users/create'
                         }
                     ]
                 },

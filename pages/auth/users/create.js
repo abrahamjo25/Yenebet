@@ -1,37 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import UserService from '../../../services/userService';
+import { Toast } from 'primereact/toast';
+import { Toolbar } from 'primereact/toolbar';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import RegisterService from '../../../services/registerService';
-import { useRouter } from 'next/router';
-import Header from '../header';
-import Footer from '../footer';
-import { Toast } from 'primereact/toast';
-function index() {
+
+const create = () => {
     let emptyResult = {
         username: null,
         email: null,
         password: null
     };
-    const router = useRouter();
-
-    const toast = useRef(null);
     const [result, setResult] = useState(emptyResult);
+    const [results, setResults] = useState(null);
+    const [resultDialog, setResultDialog] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [waiting, setWaiting] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [phoneNumberError, setPhoneNumberError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const toast = useRef(null);
+    const service = new UserService();
+    useEffect(() => {
+        fetchUser();
+    }, []);
 
-    const { ref } = router.query;
-    useEffect(() => {}, []);
-    const service = new RegisterService();
+    const fetchUser = () => {
+        setLoading(true);
+        service
+            .GetAllUser()
+            .then((res) => {
+                setResults(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
     const onInputChange = (e, name) => {
         let val = (e.target && e.target.value) || '';
         let _result = { ...result };
         _result[`${name}`] = val;
         setResult(_result);
-        if (name === 'Password') {
+        if (name === 'password') {
             if (validatePassword(val)) {
                 setPasswordError(false);
             }
@@ -52,7 +70,7 @@ function index() {
             return false;
         }
     };
-    const addUser = () => {
+    const saveResult = () => {
         setSubmitted(true);
         if (result.username && result.email && result.password) {
             if (!isphoneNumber(result.username)) {
@@ -69,47 +87,84 @@ function index() {
                         setPasswordError(false);
                         setWaiting(true);
                         service
-                            .createAccount(result, ref)
+                            .CreateUser(result)
                             .then((res) => {
                                 if (res) {
-                                    if (res.status === 3) {
-                                        toast.current.show({ severity: 'success', summary: 'Success', detail: `${res.message}`, life: 4000 });
-                                        router.push('/components/profile');
+                                    if (res.data.status === 3) {
+                                        toast.current.show({ severity: 'success', summary: 'Success', detail: `${res.data.message}`, life: 4000 });
                                     } else {
-                                        toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.message || res.data.Message}`, life: 4000 });
-                                        router.push('/');
+                                        toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.data.message || res.data.Message}`, life: 4000 });
                                     }
                                 }
                             })
                             .catch((err) => {
-                                console.log(err);
                                 toast.current.show({ severity: 'error', summary: 'Error', detail: `${err.response.data.message || 'Error occur, Unable to Register.'}`, life: 4000 });
-                                router.push('/');
                             })
                             .finally(() => {
                                 setWaiting(false);
-                                signupHide();
+                                hideDialog();
                             });
                     }
                 }
             }
         }
     };
-    const signupHide = () => {
-        router.push('/');
+    const openNew = () => {
+        setResultDialog(true);
     };
-
-    const signupFooter = (
+    const hideDialog = () => {
+        setSubmitted(false);
+        setResultDialog(false);
+        setResult(emptyResult);
+    };
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="Create New" icon="pi pi-plus" onClick={openNew} />
+                </div>
+            </React.Fragment>
+        );
+    };
+    const rightToolbarTemplate = () => {
+        return <></>;
+    };
+    const actionBodyTamplate = (rowData) => {
+        return (
+            <div className="actions">
+                <Button icon="pi pi-lock" className="p-button-rounded p-button-warning pl-1 mr-2" />
+            </div>
+        );
+    };
+    const resultDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={signupHide} />
-            {waiting ? <Button label="Please Wait ..." icon="pi pi-spin pi-spinner"></Button> : <Button label="Register" icon="pi pi-check" className="p-button-raised" onClick={addUser} />}
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideDialog} />
+            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" className="btn-danger" onClick={saveResult} />}
         </>
     );
     return (
         <>
-            <Header />
             <Toast ref={toast} />
-            <Dialog visible={true} style={{ width: '450px' }} header="Register For YeneBet" footer={signupFooter} onHide={signupHide}>
+            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate} />
+            <DataTable
+                value={results}
+                paginator
+                rows={8}
+                rowsPerPageOptions={[5, 10, 15]}
+                dataKey="id"
+                rowHover
+                filterDisplay="menu"
+                loading={loading}
+                responsiveLayout="scroll"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                emptyMessage="No User found ."
+                currentPageReportTemplate="Showing {first} - {last} of {totalRecords} Users"
+            >
+                <Column field="userName" header="Phone number" />
+                <Column field="email" header="Email" />
+                <Column header="Action" body={actionBodyTamplate} />
+            </DataTable>
+            <Dialog visible={resultDialog} style={{ width: '700px' }} header="User" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>
                 <div className="p-fluid  grid card mt-2 ">
                     <span className=" flex flex-column  gap-2  col-10 ml-5">
                         <InputText id="username" name="username" value={result.username} onChange={(e) => onInputChange(e, 'username')} placeholder="Phone" />
@@ -128,13 +183,8 @@ function index() {
                     </span>
                 </div>
             </Dialog>
-            <Footer />
         </>
     );
-}
-
-index.getLayout = function getLayout(page) {
-    return <React.Fragment>{page}</React.Fragment>;
 };
 
-export default index;
+export default create;

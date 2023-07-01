@@ -170,7 +170,7 @@ const index = (props) => {
         setButtonText('Copied!');
     };
     const bonusBodyTamplate = (rowData) => {
-        return <>{rowData.packages.packageAmount * (process.env.NEXT_PUBLIC_API_SERVICE_GAIN_PERCENT / 100)}</>;
+        return <>NAN</>;
     };
     return (
         <React.Fragment>
@@ -277,7 +277,7 @@ const index = (props) => {
                                     responsiveLayout="scroll"
                                 >
                                     <Column header="No" className="p-column-title" body={rowCount}></Column>
-                                    <Column field="fullName" header="Invited User" body="" className="p-column-title"></Column>
+                                    <Column field="userId" header="Invited User" body="" className="p-column-title"></Column>
                                     <Column field="packages.packageName" header="Package" body="" className="p-column-title"></Column>
                                     <Column field="packages.packageAmount" header="Price(ETB)" body="" className="p-column-title"></Column>
                                     <Column field="bonus" header="Your Bonus(ETB)" body={bonusBodyTamplate} className="p-column-title"></Column>
