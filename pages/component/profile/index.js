@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Footer from '../footer';
 import Header from '../header';
 import { Button } from 'primereact/button';
+import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
@@ -28,7 +29,6 @@ const index = (props) => {
         bank: null,
         accountNumber: null
     };
-    const router = useRouter();
     const contextPath = getConfig().publicRuntimeConfig.contextPath;
     const [state, setState] = useState({
         value: `/component/register?ref=`,
@@ -44,7 +44,8 @@ const index = (props) => {
     const [myPackage, setMyPackage] = useState(0);
     const [withdraw, setWithdrawDialog] = useState(false);
     const [filteredBankType, setFilteredBankType] = useState(null);
-
+    const [submitted, setSubmitted] = useState(false);
+    const router = new useRouter();
     const toast = useRef(null);
     const service = new ProfileService();
     const bankService = new PackageService();
@@ -106,10 +107,13 @@ const index = (props) => {
     };
     const hidewithdrawTrsDialog = () => {
         setWithdrawDialog(false);
+        setSubmitted(false);
         setResult(empityResult);
     };
     const saveResult = () => {
-        if (result.userName && result.amount) {
+        setSubmitted(false);
+        if (result.userName && result.amount && result.bank && result.accountNumber) {
+            setSubmitted(true);
             service
                 .createRequest(result)
                 .then((res) => {
@@ -220,7 +224,7 @@ const index = (props) => {
                             <div className="card h-full flex flex-column align-items-center justify-content-center">
                                 <span className="text-900 text-lg mb-4 font-medium">Upgrade packages to benefit more and get extra Bonus</span>
                                 <div className="py-3">
-                                    <Button icon="pi pi-upload" label="Upgrade" />
+                                    <Button icon="pi pi-upload" label="Upgrade" onClick={upgradePackage} />
                                 </div>
                             </div>
                         </div>
@@ -288,24 +292,29 @@ const index = (props) => {
                             <div className="p-fluid card mt-2 ">
                                 <div className="field">
                                     <label htmlFor="userId">User Id *</label>
-                                    <InputText id="userId" value={username} disabled={true} onChange={(e) => inputChange(e, 'userId')} required />
+                                    <InputText id="userId" value={result.userId} onChange={(e) => inputChange(e, 'userId')} required className={classNames({ 'p-invalid': submitted && !result.userId })} />
+                                    {submitted && !result.userId && <small className="p-invalid text-danger">userId is required.</small>}
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="userName">Full Name *</label>
-                                    <InputText id="userName" value={result.userName} onChange={(e) => inputChange(e, 'userName')} required />
+                                    <label htmlFor="userName">User Name *</label>
+                                    <InputText id="userName" value={result.userName} onChange={(e) => inputChange(e, 'userName')} required className={classNames({ 'p-invalid': submitted && !result.userName })} />
+                                    {submitted && !result.userName && <small className="p-invalid text-danger">userName is required.</small>}
                                 </div>
                                 <div className="field">
                                     <label htmlFor="amount">Amount *</label>
-                                    <InputText id="amount" type="number" value={result.amount} onChange={(e) => inputChange(e, 'amount')} required />
+                                    <InputText id="amount" type="number" value={result.amount} onChange={(e) => inputChange(e, 'amount')} required className={classNames({ 'p-invalid': submitted && !result.amount })} />
+                                    {submitted && !result.amount && <small className="p-invalid text-danger">amount is required.</small>}
                                 </div>
                                 <div className="field">
                                     <br />
                                     <label htmlFor="bank">Account Type*</label>
                                     <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={banks} optionLabel="bankName" required placeholder="Select Bank Type" />
+                                    {submitted && !result.bank && <small className="p-invalid text-danger">bank is required.</small>}
                                 </div>
                                 <div className="field">
-                                    <label htmlFor="accountNumber">account Number *</label>
-                                    <InputText id="accountNumber" type="number" value={result.accountNumber} onChange={(e) => inputChange(e, 'accountNumber')} required />
+                                    <label htmlFor="accountNumber">Account Number *</label>
+                                    <InputText id="accountNumber" type="number" value={result.accountNumber} onChange={(e) => inputChange(e, 'accountNumber')} required className={classNames({ 'p-invalid': submitted && !result.accountNumber })} />
+                                    {submitted && !result.accountNumber && <small className="p-invalid text-danger">Account Number is required.</small>}
                                 </div>
                             </div>
                         </Dialog>
