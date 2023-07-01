@@ -92,6 +92,7 @@ const create = () => {
                                 if (res) {
                                     if (res.data.status === 3) {
                                         toast.current.show({ severity: 'success', summary: 'Success', detail: `${res.data.message}`, life: 4000 });
+                                        fetchUser();
                                     } else {
                                         toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.data.message || res.data.Message}`, life: 4000 });
                                     }
@@ -108,6 +109,27 @@ const create = () => {
                 }
             }
         }
+    };
+    const updateStatus = (id) => {
+        setWaiting(true);
+        service
+            .updateStatus(id)
+            .then((res) => {
+                if (res) {
+                    if (res.data.status === 3) {
+                        toast.current.show({ severity: 'success', summary: 'Success', detail: `${res.data.message}`, life: 4000 });
+                        fetchUser();
+                    } else {
+                        toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.data.message || res.data.Message}`, life: 4000 });
+                    }
+                }
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error', detail: `${err.response.data.message || 'Error occur, Unable to update status.'}`, life: 4000 });
+            })
+            .finally(() => {
+                setWaiting(false);
+            });
     };
     const openNew = () => {
         setResultDialog(true);
@@ -129,12 +151,32 @@ const create = () => {
     const rightToolbarTemplate = () => {
         return <></>;
     };
+    const statusBodyTamplate = (rowData) => {
+        let text = '';
+        let style = '';
+        if (rowData.status === 1) {
+            text = 'Active';
+            style = 'customer-badge status-qualified';
+        } else {
+            text = 'Inactive';
+            style = 'customer-badge status-unqualified';
+        }
+        return <span className={style}>{text}</span>;
+    };
     const actionBodyTamplate = (rowData) => {
-        return (
-            <div className="actions">
-                <Button icon="pi pi-lock" className="p-button-rounded p-button-warning pl-1 mr-2" />
-            </div>
-        );
+        if (rowData.status === 1) {
+            return (
+                <div className="actions">
+                    <Button icon="pi pi-lock" className="p-button-rounded p-button-warning pl-1 mr-2" onClick={() => updateStatus(rowData.id)} />
+                </div>
+            );
+        } else {
+            return (
+                <div className="actions">
+                    <Button icon="pi pi-unlock" className="p-button-rounded p-button-danger pl-1 mr-2" onClick={() => updateStatus(rowData.id)} />
+                </div>
+            );
+        }
     };
     const resultDialogFooter = (
         <>
@@ -162,6 +204,7 @@ const create = () => {
             >
                 <Column field="userName" header="Phone number" />
                 <Column field="email" header="Email" />
+                <Column field="status" header="Status" body={statusBodyTamplate} />
                 <Column header="Action" body={actionBodyTamplate} />
             </DataTable>
             <Dialog visible={resultDialog} style={{ width: '700px' }} header="User" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>

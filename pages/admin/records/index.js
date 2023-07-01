@@ -14,6 +14,7 @@ export default function index() {
     const [results, setResults] = useState(null);
     const [checked, setChecked] = useState(false);
     const [resultDialog, setResultDialog] = useState(false);
+    const [revertDialog, setRevertDialog] = useState(false);
     const service = new RecordService();
     const toast = useRef(null);
     useEffect(() => {
@@ -38,13 +39,20 @@ export default function index() {
         );
     };
     const openDialog = (rowData) => {
-        debugger;
         setResult(rowData);
         setResultDialog(true);
+    };
+    const openRevertDialog = (rowData) => {
+        setResult(rowData);
+        setRevertDialog(true);
     };
     const hideDialog = () => {
         setChecked(false);
         setResultDialog(false);
+    };
+    const hideRevertDialog = () => {
+        setChecked(false);
+        setRevertDialog(false);
     };
 
     const searchInput = () => {
@@ -55,7 +63,6 @@ export default function index() {
         );
     };
     const saveResult = () => {
-        debugger;
         let id = result?.id || 0;
         let user = result?.userId || '';
         let transactionId = result?.transactionId || '';
@@ -65,6 +72,28 @@ export default function index() {
             .then((res) => {
                 if (res.data.status === 3) {
                     toast.current.show({ severity: 'success', summary: 'Successull', detail: 'Payment Approved', life: 4000 });
+                } else {
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.data.message}`, life: 4000 });
+                }
+            })
+            .catch((err) => {
+                toast.current.show({ severity: 'error', summary: 'Error', detail: `Error Occured`, life: 4000 });
+            })
+            .finally(() => {
+                setWaiting(false);
+                hideDialog();
+            });
+    };
+    const updateResult = () => {
+        let id = result?.id || 0;
+        let user = result?.userId || '';
+        let transactionId = result?.transactionId || '';
+        setWaiting(true);
+        service
+            .revertRecord(id, user, transactionId)
+            .then((res) => {
+                if (res.data.status === 3) {
+                    toast.current.show({ severity: 'success', summary: 'Successull', detail: 'Payment Reverted back to un payed', life: 4000 });
                 } else {
                     toast.current.show({ severity: 'error', summary: 'Error', detail: `${res.data.message}`, life: 4000 });
                 }
@@ -95,11 +124,17 @@ export default function index() {
             {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" disabled={!checked} className="btn-danger" onClick={saveResult} />}
         </>
     );
+    const revertDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text btn-success" onClick={hideRevertDialog} />
+            {waiting ? <Button label="Saving" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="Save" icon="pi pi-save" disabled={!checked} className="btn-danger" onClick={updateResult} />}
+        </>
+    );
     const actionBodyTemplate = (rowData) => {
         if (rowData.isPayed === true) {
             return (
                 <div className="actions">
-                    <Button icon="pi pi-check" label="Revert" className="p-button-rounded p-button-info pl-1 mr-2" onClick={() => openDialog(rowData)} />
+                    <Button icon="pi pi-check" label="Revert" className="p-button-rounded p-button-info pl-1 mr-2" onClick={() => openRevertDialog(rowData)} />
                 </div>
             );
         } else {
@@ -148,7 +183,17 @@ export default function index() {
             </DataTable>
             <Dialog visible={resultDialog} style={{ width: '450px' }} header="" modal className="p-fluid" footer={resultDialogFooter} onHide={hideDialog}>
                 <h4 className="text-red-600 text-center">Warining!</h4>
-                <p className="text-center">Are you sure! you must check the transaction Id is correct with TransactionID {result?.transactionId}</p>
+                <p className="text-center">
+                    Are you sure! you must check the transaction Id is correct with TransactionID <u>{result?.transactionId}</u>
+                </p>
+                <Checkbox id="checkbox" onChange={(e) => setChecked(!checked)} checked={checked}></Checkbox>
+                <label htmlFor="checkbox"> Confirm here </label>
+            </Dialog>
+            <Dialog visible={revertDialog} style={{ width: '450px' }} header="" modal className="p-fluid" footer={revertDialogFooter} onHide={hideRevertDialog}>
+                <h4 className="text-red-600 text-center">Warining!</h4>
+                <p className="text-center">
+                    Are you sure! you are reverting back to un payed with TransactionID <u>{result?.transactionId}</u>
+                </p>
                 <Checkbox id="checkbox" onChange={(e) => setChecked(!checked)} checked={checked}></Checkbox>
                 <label htmlFor="checkbox"> Confirm here </label>
             </Dialog>

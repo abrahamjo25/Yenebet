@@ -6,4 +6,8 @@ export default class UserService {
     GetAllUser = () => {
         return HttpService.getService('Authenticate/get-users');
     };
+    updateStatus = (id) => {
+        debugger;
+        return HttpService.putService(`Authenticate/update-status?Id=${id}`);
+    };
 }
