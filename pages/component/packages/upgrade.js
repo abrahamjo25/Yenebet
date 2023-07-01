@@ -13,7 +13,7 @@ import { classNames } from 'primereact/utils';
 const detail = (prop) => {
     let empityResult = {
         packageId: '',
-        amount: 0,
+        // amount: 0,
         bank: '',
         fullName: '',
         transactionId: ''
@@ -22,7 +22,9 @@ const detail = (prop) => {
     const [results, setResults] = useState(null);
     const router = new useRouter();
     const [banks, setBanks] = useState(null);
+    const [packages, setPackage] = useState([]);
     const [filteredBankType, setFilteredBankType] = useState(null);
+    const [filteredPackage, setFilteredPackage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -30,11 +32,10 @@ const detail = (prop) => {
     const bankService = new PackageService();
     useEffect(() => {
         debugger;
-        console.log(router.query.description);
+        // console.log(router.query.description);
         bankService
             .getBank()
             .then((res) => {
-                console.log('Bank', res.data);
                 setBanks(res.data);
             })
             .catch((err) => {
@@ -43,11 +44,33 @@ const detail = (prop) => {
             .finally(() => {
                 setLoading(false);
             });
+        bankService
+            .getPackage()
+            .then((res) => {
+                setPackage(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
+    const findMax = () => {
+        debugger;
+        let cPA = 8000;
+        let index = [];
+        for (let i = 1; i <= packages.length; i++) {
+            if (packages[i]?.packageAmount > cPA) {
+                index.push(packages[i]);
+            }
+        }
+        return index;
+    };
     const saveResult = () => {
-        result['packageId'] = router.query.id;
-        result['amount'] = router.query.packageAmount;
-        bankService.buyPackage(result).then((res) => {
+        // result['packageId'] = router.query.id;
+        // result['amount'] = router.query.packageAmount;
+        bankService.upgradePackage(result).then((res) => {
             if (res.data.status === 3) {
                 console.log('MESSAGE', res);
                 setResults(res.data);
@@ -67,12 +90,25 @@ const detail = (prop) => {
             }
         });
     };
+    const clearData = () => {
+        setResult(empityResult);
+        setFilteredBankType(null);
+        setFilteredPackage(null);
+    };
     const OndropdawnChange = (e, name) => {
         debugger;
         const val = (e.target && e.target.value) || '';
         let _result = { ...result };
         _result[`${name}`] = val.bankName;
         setFilteredBankType(val);
+        setResult(_result);
+    };
+    const OnPackageChange = (e, name) => {
+        debugger;
+        const val = (e.target && e.target.value) || '';
+        let _result = { ...result };
+        _result[`${name}`] = val.id;
+        setFilteredPackage(val);
         setResult(_result);
     };
     const onInputChange = (e, name) => {
@@ -94,7 +130,7 @@ const detail = (prop) => {
                             <div className="flex-auto lg:ml-3">
                                 <div className="grid">
                                     <div className="col-12 lg:col-6 field mb-4">
-                                        <span className="text-900 text-xl font-bold">Package Name : </span>
+                                        <span className="text-900 text-xl font-bold">Your Package Name : </span>
                                         <span className="text-900 font-bold">{router.query.packageName}</span>
                                     </div>
                                     <div className="col-12 lg:col-6 field mb-4">
@@ -102,29 +138,24 @@ const detail = (prop) => {
                                         <span className="text-900 font-bold">{router.query.packageAmount}</span>{' '}
                                     </div>
                                 </div>
-                                <div className="text-600 text-sm mb-3">!!!!!!</div>
+                                <div className="text-600 text-sm mb-3">Write description here about upgradin package</div>
                                 <div className="flex flex-auto justify-content-between align-items-center"></div>
                             </div>
                         </div>
-                        <div className="card col-12">
-                            <div className="flex justify-content-between align-items-center mb-3">
-                                <span className="text-900 font-medium">Subtotal</span>
-                                <span className="text-900">$123.00</span>
+                        <div className="card grid">
+                            <div className=" col-6">
+                                <label htmlFor="bank">Account Type*</label>
+                                <div className="field col-12 ">
+                                    <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={banks} optionLabel="bankName" className="w-full" required placeholder="Select Bank Type" />
+                                    {submitted && !result.bank && <small className="p-invalid text-danger">bank is required.</small>}
+                                </div>
                             </div>
-                            <div className="flex justify-content-between align-items-center mb-3">
-                                <span className="text-900 font-medium">Shipping</span>
-                                <span className="text-primary font-bold">Free</span>
-                            </div>
-                            <div className="flex justify-content-between align-items-center mb-3">
-                                <span className="text-900 font-bold">Total</span>
-                                <span className="text-900 font-medium text-xl">$123.00</span>
-                            </div>
-                        </div>
-                        <div className="card col-12">
-                            <label htmlFor="bank">Account Type*</label>
-                            <div className="field col-12 ">
-                                <Dropdown id="bank" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'bank')} options={banks} optionLabel="bankName" className="w-full" required placeholder="Select Bank Type" />
-                                {submitted && !result.bank && <small className="p-invalid text-danger">bank is required.</small>}
+                            <div className=" col-6">
+                                <label htmlFor="packageId">Packages*</label>
+                                <div className="field col-12 ">
+                                    <Dropdown id="" value={filteredPackage || ''} onChange={(e) => OnPackageChange(e, 'packageId')} options={findMax()} optionLabel="packageName" className="w-full" required placeholder="Select Package" />
+                                    {submitted && !result.packageId && <small className="p-invalid text-danger">package is required.</small>}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,22 +173,9 @@ const detail = (prop) => {
                                 <InputText id="transactionId" value={result.transactionId} onChange={(e) => onInputChange(e, 'transactionId')} required placeholder="የተከፈለበት መለያ/TransactionId" className={'p-inputtext w-full'} />
                                 {submitted && !result.transactionId && <small className="p-invalid text-danger">transactionId is required.</small>}
                             </div>
-
-                            {/* <div className="card p-fluid">
-                                <div className="field col">
-                                    <h6>Select Bank</h6>
-                                    <p>you can pay with internet banking or cash</p>
-                                </div>
-
-                                <div className="field col">
-                                    <Dropdown id="BankType" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="የባንክ አይነት / Bank Type" />
-                                    {submitted && !result.noTask && <small className="p-invalid text-danger">noTask is required.</small>}
-                                </div>
-                            </div> */}
-
                             <div className="field col">
                                 {waiting ? <Button label="PLACE ORDER" className="p-button-warning" icon="pi pi-spin pi-spinner" disabled={true} /> : <Button label="PLACE ORDER" icon="" className="p-button-warning w-full" onClick={saveResult} />}
-                                <Button label="Go Back" icon="" className="p-button-text btn-success w-full" onClick="" />
+                                <Button label="Clear" icon="" className="p-button-text btn-success w-full" onClick={clearData} />
                             </div>
                         </div>
                     </div>

@@ -10,6 +10,8 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
 import PackageService from '../../../services/PackageService';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 const index = () => {
     let emptyResult = {
         packageName: '',
@@ -32,6 +34,7 @@ const index = () => {
         { name: 'Awash Bank ', value: '3' },
         { name: 'Dashen Bank', value: '4' }
     ];
+    const router = new useRouter();
     useEffect(() => {
         debugger;
         setLoading(true);
@@ -48,8 +51,20 @@ const index = () => {
                 setLoading(false);
             });
     }, []);
-    const packageDetail = (e) => {
-        setPackageDilog(true);
+    const packageDetail = (rowData) => {
+        router.push({
+            pathname: '/component/packages/detail',
+            query: {
+                description: rowData.description,
+                noTask: rowData.noTask,
+                packageAmount: rowData.packageAmount,
+                packageName: rowData.packageName,
+                id: rowData.id
+            }
+        });
+        // setPackageDilog(true);
+
+        console.log('Data', rowData);
     };
     const hideDialog = () => {
         setResult(emptyResult);
@@ -95,7 +110,7 @@ const index = () => {
                                                         <span>Morbi tincidunt augue</span>
                                                     </li>
                                                     <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
-                                                    <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={(e) => packageDetail(e)} />
+                                                    <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={() => packageDetail(index)} />
                                                 </ul>
                                             </div>
                                         </div>
@@ -131,7 +146,7 @@ const index = () => {
                                 </div>
 
                                 <div className="field col">
-                                    <Dropdown id="BankType" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="የባንክ አይነት / Bank Type" />
+                                    <Dropdown id="ban" value={filteredBankType || ''} onChange={(e) => OndropdawnChange(e, 'BankType')} options={bankTypes} optionLabel="name" required placeholder="የባንክ አይነት / Bank Type" />
                                     {/* <Dropdown id="noTask" value={result.noTask} onChange={(e) => onInputChange(e, 'noTask')} required placeholder="የባንክ አይነት / Bank Type" className={classNames({ 'p-invalid': submitted && !result.noTask })} /> */}
                                     {submitted && !result.noTask && <small className="p-invalid text-danger">noTask is required.</small>}
                                 </div>

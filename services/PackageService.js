@@ -41,4 +41,13 @@ export default class PackageService {
         debugger;
         return HttpService.putService('/Task/Delete/' + id, data, '');
     };
+    /////// Buy Package
+    buyPackage = (data, claim) => {
+        debugger;
+        return HttpService.postService('/Record/Create', data, '');
+    };
+    upgradePackage = (data, claim) => {
+        debugger;
+        return HttpService.putService('/Record/Upgrade', data, '');
+    };
 }
